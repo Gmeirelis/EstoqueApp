@@ -1,0 +1,232 @@
+import SelectDinamico from "../ui/SelectFilter";
+import { useState } from "react";
+
+export default function AdicionarEmprestimo({ atualizaremprestimo }) {
+  const [item, setItem] = useState("");
+  const [funcionario, setFuncionario] = useState("");
+  const [dataEmprestimo, setDataEmprestimo] = useState("");
+  const [dataDevolucao, setDataDevolucao] = useState("");
+  const [Observacao, setObservacao] = useState("");
+
+  // Adicionado para dar feedback visual na tela
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+
+
+    const dataSalve = {
+      id_item: item,
+      id_funcionario: funcionario,
+      data_emprestimo: dataEmprestimo,
+      devolucao: dataDevolucao,
+      observacao: Observacao,
+    };
+
+
+    try {
+      console.log("🔥 3 - antes do fetch");
+
+      const resposta = await fetch("http://localhost:1050/emprestimo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataSalve),
+      });
+
+    
+
+      const informacao = await resposta.json();
+
+     
+
+      if (resposta.ok) {
+        console.log("🔥 6 - chamando função do pai");
+
+        atualizaremprestimo(informacao.dados);
+      } else {
+        console.log("🔥 ERRO HTTP:", resposta.status);
+      }
+    } catch (erro) {
+      console.log("🔥 ERRO NO FETCH:", erro);
+    }
+  };
+  return (
+    <form className="w-full max-w-3xl rounded-2xl p-8 " onSubmit={handleSubmit}>
+      {/* Cabeçalho */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-gray-800">
+          Registro de empréstimooo
+        </h2>
+
+        <p className="text-sm text-gray-500 mt-1">
+          Preencha os dados abaixo para registrar o empréstimo do item.
+        </p>
+      </div>
+
+      {/* Grid dos campos */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Item */}
+        <div className="flex flex-col">
+          <label className="text-sm font-semibold text-gray-700 mb-2">
+            Item
+          </label>
+
+          <SelectDinamico
+            nome="Selecione o item"
+            url="http://localhost:1050/itens/selectItem"
+            info="item_nome"
+            idKey="id_item"
+            valor={item}
+            aoMudar={(valor) => setItem(valor)}
+          />
+        </div>
+
+        {/* Funcionário */}
+        <div className="flex flex-col">
+          <label className="text-sm font-semibold text-gray-700 mb-2">
+            Funcionário
+          </label>
+
+          <SelectDinamico
+            nome="Selecione o funcionário"
+            url="http://localhost:1050/funcionarios"
+            info="funcionario_nome"
+            idKey="id_funcionario"
+            valor={funcionario}
+            aoMudar={(valor) => setFuncionario(valor)}
+          />
+        </div>
+
+        {/* Data empréstimo */}
+        <div className="flex flex-col">
+          <label
+            htmlFor="data_emprestimo"
+            className="text-sm font-semibold text-gray-700 mb-2"
+          >
+            Data do empréstimo
+          </label>
+
+          <input
+            id="data_emprestimo"
+            type="date"
+            name="data_emprestimo"
+            value={dataEmprestimo}
+            onChange={(e) => setDataEmprestimo(e.target.value)}
+            className="
+          w-full
+          h-11
+          px-3
+          border
+          border-gray-300
+          rounded-lg
+          bg-gray-50
+          text-gray-700
+          outline-none
+          transition
+          focus:bg-white
+          focus:border-green-500
+          focus:ring-2
+          focus:ring-green-100
+        "
+          />
+        </div>
+
+        {/* Data devolução */}
+        <div className="flex flex-col">
+          <label
+            htmlFor="data_devolucao"
+            className="text-sm font-semibold text-gray-700 mb-2"
+          >
+            Data prevista de devolução
+          </label>
+
+          <input
+            id="data_devolucao"
+            type="date"
+            name="data_devolucao"
+            value={dataDevolucao}
+            onChange={(e) => setDataDevolucao(e.target.value)}
+            className="
+          w-full
+          h-11
+          px-3
+          border
+          border-gray-300
+          rounded-lg
+          bg-gray-50
+          text-gray-700
+          outline-none
+          transition
+          focus:bg-white
+          focus:border-green-500
+          focus:ring-2
+          focus:ring-green-100
+        "
+          />
+        </div>
+      </div>
+
+      {/* Observação */}
+      <div className="flex flex-col mt-6">
+        <label
+          htmlFor="observacao"
+          className="text-sm font-semibold text-gray-700 mb-2"
+        >
+          Observação
+        </label>
+
+        <textarea
+          id="observacao"
+          name="observacao"
+          value={Observacao}
+          onChange={(e) => setObservacao(e.target.value)}
+          placeholder="Digite uma observação sobre o empréstimo..."
+          rows="3"
+          className="
+        w-full
+        px-3
+        py-3
+        border
+        border-gray-300
+        rounded-lg
+        bg-gray-50
+        text-gray-700
+        resize-none
+        outline-none
+        transition
+        focus:bg-white
+        focus:border-green-500
+        focus:ring-2
+        focus:ring-green-100
+      "
+        />
+      </div>
+
+      {/* Botões */}
+      <div className="flex flex-col-reverse sm:flex-row gap-3 mt-8">
+        <button
+          type="submit"
+          className="
+         w-3xs
+        sm:flex-1
+        bg-green-600
+        text-white
+        font-semibold
+        py-3
+        px-6
+        rounded-lg
+        shadow-sm
+        hover:bg-green-700
+        active:scale-[0.99]
+        transition
+        duration-200
+      "
+        >
+          Salvar empréstimo
+        </button>
+      </div>
+    </form>
+  );
+}
