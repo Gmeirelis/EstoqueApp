@@ -1,4 +1,7 @@
-import SelectDinamico from "../ui/SelectFilter";
+
+import Select from "../../utils/SelectName";
+import API_URL from "../../config/apis";
+
 
 export default function FiltroEmprestimo({
   filtroDepartamento,
@@ -6,29 +9,29 @@ export default function FiltroEmprestimo({
   filtroColaborador,
   setFiltroColaborador
 }) {
-
+console.log('teste', filtroColaborador)
   return (
     <div className="flex gap-4">
 
-      <SelectDinamico
-        nome="departamento"
-        info="departamento_nome"
-        url="http://localhost:1050/emprestimo/selectnome"
-        value={filtroDepartamento}
-        aoMudar={(valorSelecionado) =>
-          setFiltroDepartamento(valorSelecionado)
-        }
-      />
-
-      <SelectDinamico
-        nome="funcionario"
-        info="funcionario_nome"
-        url="http://localhost:1050/emprestimo/selectnome"
-        value={filtroColaborador}
-        aoMudar={(valorSelecionado) =>
-          setFiltroColaborador(valorSelecionado)
-        }
-      />
+      
+       <Select
+        nome={"selecione departamento"}
+      url={`${API_URL}/emprestimo/selectnome`}
+      valor={filtroDepartamento}
+      setValor={setFiltroDepartamento}
+      chave="id_emprestimo"
+      nomeEntidade="departamento_nome"
+       
+       />
+     <Select
+     nome={"selecione funcionario"}
+      url={`${API_URL}/emprestimo/selectnome`}
+      valor={filtroColaborador}
+      setValor={setFiltroColaborador}
+      chave="id_emprestimo"
+      nomeEntidade="funcionario_nome"
+     
+     />
 
     </div>
   );

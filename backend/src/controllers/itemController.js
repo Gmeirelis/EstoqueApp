@@ -34,7 +34,7 @@ const excluirItem = (req, res) => {
 // responsavel por renderizar na tabela de produtos adicionado
 const getItensProdutos = (req, res) => {
 
-  const idDepartamento = req.usuario.id_departamento;
+  
 
   const sql = `
         SELECT 
@@ -43,7 +43,6 @@ const getItensProdutos = (req, res) => {
       m.quantidade,
       m.observacao,
       m.data_movimentacao,
-      i.id_departamento,
        i.id_item,
        i.item_status,
       i.item_nome,
@@ -54,11 +53,11 @@ const getItensProdutos = (req, res) => {
     FROM movimentacoes m
     JOIN itens i ON m.id_item = i.id_item
     JOIN categorias c ON i.id_categoria = c.id_categoria
-    WHERE id_departamento = ?  &&  item_status = "ATIVO"
+    WHERE item_status = "ATIVO"
     ORDER BY m.data_movimentacao DESC;
   `;
 
-  conexao.query(sql, [idDepartamento], (err, resultado) => {
+  conexao.query(sql, (err, resultado) => {
     if (err) {
       console.error("Erro na consulta SQL:", err); // Dica: logar o 'err' ajuda a ver detalhes no console do backend
       return res.status(500).json({ mensagem: "erro interno" });
@@ -71,8 +70,8 @@ const getItensProdutos = (req, res) => {
 const getItensSelect = (req, res) => {
   //const idDepartamento = req.usuario.id_departamento;
 
-  const sql = `SELECT id_item,item_nome  FROM itens
-WHERE situal_emprestimo = "DISPONIVEL";
+  const sql = `SELECT id_item,item_nome,item_status FROM itens
+WHERE situal_emprestimo = "DISPONIVEL" && item_status="ATIVO" ;
   
   `;
 
@@ -88,18 +87,15 @@ WHERE situal_emprestimo = "DISPONIVEL";
 
 const postItens = (req, res) => {
   const {
-    id_departamento,
     nome,
     marca,
     modelo,
     id_categoria,
-    descricao,
-    quantidade,
+    descricao
   } = req.body;
 
   const sql = `
     INSERT INTO itens (
-      id_departamento,
       item_nome,
       item_marca,
       item_modelo,
@@ -108,12 +104,11 @@ const postItens = (req, res) => {
       item_status,
       situal_emprestimo
     )
-    VALUES (?,?,?,?,?,?,?,?)
+    VALUES (?,?,?,?,?,?,?)
   `;
   conexao.query(
     sql,
     [
-      id_departamento,
       nome,
       marca,
       modelo,
@@ -142,7 +137,7 @@ const postItens = (req, res) => {
 
       conexao.query(
         sqlinsert,
-        [1, novoID, "ENTRADA", quantidade, "Cadastro inicial do item"],
+        [1, novoID, "ENTRADA", 1 , "Cadastro inicial do item"],
         (errMovimento, result) => {
           if (errMovimento) {
             console.log("erro", errMovimento);
@@ -274,17 +269,16 @@ INNER JOIN
 };
 
 const itensRenderizar = (req, res) => {
-  const idDepartamento = req.usuario.id_departamento;
+  
 
   const sql = `
 SELECT *
 FROM itens
-
 WHERE item_status IN ('ATIVO', 'MANUTENCAO')
-AND id_departamento = ?
+
 `;
 
-  conexao.query(sql, [idDepartamento], (err, resultado) => {
+  conexao.query(sql,  (err, resultado) => {
     if (err) {
       console.error(err);
       return res.status(500).json({ mensagem: "error internal" });
@@ -312,25 +306,18 @@ const updateAtivo = (req, res) => {
 };
 
 const getCategoriaItens = (req, res) => {
-  const idDepartamento = req.usuario.id_departamento;
-
-  if (!idDepartamento) {
-    return res.status(400).json({ mensagem: "Departamento não identificado." });
-  }
-
+  
   const getSql = `
   SELECT 
     c.id_categoria, 
     TRIM(c.categoria_nome) AS categoria_nome 
 FROM itens i
 JOIN categorias c ON i.id_categoria = c.id_categoria
-WHERE i.id_departamento = ?
 GROUP BY c.id_categoria, c.categoria_nome;
-
 
   `;
 
-  conexao.query(getSql, [idDepartamento], (err, resultado) => {
+  conexao.query(getSql, (err, resultado) => {
     if (err) {
       console.log("erro ao buscar  api ", err);
       return res.status(500).json({ mensagem: "error internal server" });
@@ -340,9 +327,15 @@ GROUP BY c.id_categoria, c.categoria_nome;
 };
 
 const getCountCategory = (req, res) => {
-  const getSql = `SELECT c.categoria_nome,count(*) as total FROM itens i 
-join categorias c on i.id_categoria = c.id_categoria
-group by categoria_nome;`;
+  const getSql = `SELECT 
+    c.categoria_nome,
+    i.item_status,
+    COUNT(*) AS total
+FROM itens i
+JOIN categorias c 
+    ON i.id_categoria = c.id_categoria
+WHERE i.item_status IN ('ATIVO', 'MANUTENCAO')
+GROUP BY c.categoria_nome, i.item_status;`;
 
   conexao.query(getSql, (err, resultado) => {
     if (err) {
@@ -371,6 +364,20 @@ conexao.query(getsql,(error,resultado)=>{
 
 }
 
+const selectProductCategory = (req,res)=>{
+
+const getSql =`select * from itens i 
+join categorias c on i.id_categoria = c.id_categoria
+where item_status = "ATIVO";`
+
+conexao.query(getSql,(err,resultado)=>{
+  if(err){
+  console.log('erro ao entregar os dados',err)
+  return res.status(500).json({messagen:"erro internal serve"})
+  }
+  return res.status(200).json(resultado)
+})
+}
 
 
 module.exports = {
@@ -386,6 +393,7 @@ module.exports = {
   getCategoriaItens,
   getCountCategory,
   getItemFilter,
-  excluirItem
+  excluirItem,
+  selectProductCategory
 };
 //return res.status(200).json({ resposta: "item atualizado" });//

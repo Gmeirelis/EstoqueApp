@@ -1,5 +1,6 @@
 import SelectDinamico from "../ui/SelectFilter";
 import { useState } from "react";
+import API_URL from "../../config/apis";
 
 export default function AdicionarEmprestimo({ atualizaremprestimo }) {
   const [item, setItem] = useState("");
@@ -10,10 +11,10 @@ export default function AdicionarEmprestimo({ atualizaremprestimo }) {
 
   // Adicionado para dar feedback visual na tela
 
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-
 
     const dataSalve = {
       id_item: item,
@@ -25,12 +26,13 @@ export default function AdicionarEmprestimo({ atualizaremprestimo }) {
 
 
     try {
-      console.log("🔥 3 - antes do fetch");
-
-      const resposta = await fetch("http://localhost:1050/emprestimo", {
+     
+const token = localStorage.getItem("token");
+      const resposta = await fetch(`${API_URL}/emprestimo`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(dataSalve),
       });
@@ -42,14 +44,13 @@ export default function AdicionarEmprestimo({ atualizaremprestimo }) {
      
 
       if (resposta.ok) {
-        console.log("🔥 6 - chamando função do pai");
-
         atualizaremprestimo(informacao.dados);
       } else {
-        console.log("🔥 ERRO HTTP:", resposta.status);
+        console.log("ERRO HTTP:", resposta.status);
       }
+
     } catch (erro) {
-      console.log("🔥 ERRO NO FETCH:", erro);
+      console.log("erro no fetch", erro);
     }
   };
   return (
@@ -75,7 +76,7 @@ export default function AdicionarEmprestimo({ atualizaremprestimo }) {
 
           <SelectDinamico
             nome="Selecione o item"
-            url="http://localhost:1050/itens/selectItem"
+            url={`${API_URL}/itens/selectItem`}
             info="item_nome"
             idKey="id_item"
             valor={item}
@@ -91,7 +92,7 @@ export default function AdicionarEmprestimo({ atualizaremprestimo }) {
 
           <SelectDinamico
             nome="Selecione o funcionário"
-            url="http://localhost:1050/funcionarios"
+            url={`${API_URL}/funcionarios`}
             info="funcionario_nome"
             idKey="id_funcionario"
             valor={funcionario}
@@ -126,7 +127,6 @@ export default function AdicionarEmprestimo({ atualizaremprestimo }) {
           outline-none
           transition
           focus:bg-white
-          focus:border-green-500
           focus:ring-2
           focus:ring-green-100
         "

@@ -2,6 +2,7 @@ import IconProduto from "../../utils/Icone";
 import { IconCalendar } from "@tabler/icons-react";
 import { Undo2 } from "lucide-react";
 import { useState } from "react";
+import API_URL from "../../config/apis";
 
 export default function Tabela({
   filtroDepartamento,
@@ -18,7 +19,7 @@ export default function Tabela({
   console.log(devolucao);
 
   const delvoverItem = async (dadosDevolucao) => {
-    const API = await fetch("http://localhost:1050/devolutionItem", {
+    const API = await fetch(`${API_URL}/devolutionItem`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

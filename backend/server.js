@@ -1,37 +1,43 @@
 
-const express = require('express')
+const express = require('express');
 const cors = require('cors');
-const app = express()
+const conexao = require('./src/config/db'); // Ajuste para o caminho real
 
-const userRouter = require('./src/router/userRouter')
-const departamentsRouter = require('./src/router/departmentRouter')
-const itensRouter = require('./src/router/itemRouter')
-const categoryRouter = require('./src/router/categoryRouter')
-const movimentRouter = require('./src/router/movementRouter')
-const emprestimoRouter = require('./src/router/emprestimoRouter')
-const funcionarioRouter = require('./src/router/funcionarioRouter')
-
+const app = express();
+const PORT = process.env.PORT || 1050;
 
 app.use(express.json());
-app.use(cors());
 
-app.use(userRouter);
-app.use(departamentsRouter);
-app.use(itensRouter);
-app.use(categoryRouter)
-app.use(movimentRouter)
-app.use(emprestimoRouter)
-app.use(funcionarioRouter)
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173'
+}));
+
+app.use(require('./src/router/userRouter'));
+app.use(require('./src/router/departmentRouter'));
+app.use(require('./src/router/itemRouter'));
+app.use(require('./src/router/categoryRouter'));
+app.use(require('./src/router/movementRouter'));
+app.use(require('./src/router/emprestimoRouter'));
+app.use(require('./src/router/funcionarioRouter'));
 
 app.get('/', (req, res) => {
-    res.status(200).json({
-        mensagem: 'Servidor rodando com sucesso',
-        porta: 1050,
-        status: 'online'
-    });
+  res.status(200).json({
+    mensagem: 'Servidor rodando com sucesso',
+    porta: PORT,
+    status: 'online',
+    versao: '1.0.0'
+  });
 });
 
-app.listen(1050,()=>{
-     console.log('Servidor rodando na porta 1050');
-     
-})
+conexao.connect((err) => {
+  if (err) {
+    console.error('Erro ao conectar com MySQL:', err.message);
+    process.exit(1);
+  }
+
+  console.log('Banco de dados conectado');
+
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`EstoqueApp API rodando na porta ${PORT}`);
+  });
+});

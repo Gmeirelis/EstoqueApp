@@ -7,14 +7,14 @@ export default function SelectDinamico({
   url,
   idKey,
   aoMudar,
-  valor
+  valor,
+  update
 }) {
   const [dados, setDados] = useState([]);
 
-  useEffect(() => {
-    setDados([]);
 
-    async function buscarDados() {
+
+ async function buscarDados() {
       const token = localStorage.getItem("token");
 
       try {
@@ -32,8 +32,12 @@ export default function SelectDinamico({
       }
     }
 
-    buscarDados();
-  }, [url]);
+  useEffect(() => {
+  setDados([]);
+  buscarDados();
+}, [url, update]);;
+
+ 
 
   return (
     <select

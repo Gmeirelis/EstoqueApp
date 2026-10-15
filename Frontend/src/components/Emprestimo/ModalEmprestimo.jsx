@@ -2,7 +2,7 @@ import { useState } from "react"
 
 
 
-export default function ModalDevolucao({fecharModal,funDevolucao,items}){
+export default function ModalDevolucao({fecharModal,funDevolucao}){
 
 const [ismodal,setIsmodal] = useState(false)
 const[id,setid] = useState({

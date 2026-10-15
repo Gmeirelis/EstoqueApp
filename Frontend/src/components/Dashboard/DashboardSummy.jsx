@@ -8,14 +8,10 @@ import {  Wrench, PackageCheck,Laptop } from "lucide-react";
 export default function Summary() {
   const [resumo, setResumo] = useState([]);
 
-const token = localStorage.getItem("token");
+//const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch("http://localhost:1050/product/itens",{
-       headers:{
-        Authorization: `Bearer ${token}`,
-  }
-    })
+    fetch("http://localhost:1050/product/itens")
       .then((resposta) => resposta.json())
       .then((dados) => {
         setResumo(dados);
@@ -28,7 +24,7 @@ const token = localStorage.getItem("token");
   const dadosfiltrados = resumo.filter(item => item.item_status === "ATIVO" || "MANUTENCAO");
   const filtroManutencao = dadosfiltrados.filter(item => item.item_status === "MANUTENCAO")
   const filtroEmuso = dadosfiltrados.filter(item =>item.situal_emprestimo === "INDISPONIVEL")
-  const filtroDisponivel = dadosfiltrados.filter(item => item.situal_emprestimo === "DISPONIVEL")
+  //const filtroDisponivel = dadosfiltrados.filter(item => item.situal_emprestimo === "DISPONIVEL")
   console.log(resumo)
   console.log(filtroManutencao)
 
