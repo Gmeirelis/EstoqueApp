@@ -7,49 +7,91 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 /*CREATE*/
 
+
 const loginUser = async (req, res) => {
   const { email, senha } = req.body;
 
-  const getSql = `SELECT * FROM usuarios WHERE email = ?`;
+  if (!email || !senha) {
+    return res.status(400).json({
+      mensagem: "Informe o e-mail e a senha."
+    });
+  }
 
-  conexao.query(getSql, [email], async (err, resultado) => {
+  if (!process.env.JWT_SECRET) {
+    console.error("JWT_SECRET não configurado.");
+    return res.status(500).json({
+      mensagem: "Erro interno do servidor."
+    });
+  }
+
+  const sql = `
+    SELECT
+      id_usuario,
+      id_departamento,
+      nome,
+      sobrenome,
+      email,
+      senha,
+      administrador
+    FROM usuarios
+    WHERE email = ?
+    LIMIT 1
+  `;
+
+  conexao.query(sql, [email], async (err, resultados) => {
     if (err) {
-      console.log(err);
+      console.error("Erro ao consultar usuário:", err.message);
       return res.status(500).json({
-        mensagem: "Erro interno",
+        mensagem: "Erro interno do servidor."
       });
     }
 
-    if (resultado.length === 0) {
-      return res.status(404).json({
-        mensagem: "Usuário não encontrado",
-      });
-    }
-
-    const senhaCorreta = await bcrypt.compare(senha, resultado[0].senha);
-
-    if (!senhaCorreta) {
+    if (resultados.length === 0) {
       return res.status(401).json({
-        mensagem: "Senha incorreta",
+        mensagem: "E-mail ou senha inválidos."
       });
     }
 
-    const token = jwt.sign(
-      {
-        id: resultado[0].id_usuarios,
-        nome: resultado[0].nome,
-        sobrenome: resultado[0].sobrenome,
-        email: resultado[0].email,
-        adm: resultado[0].adm,
-        id_departamento: resultado[0].id_departamento,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "8h",
-      },
-    );
+    const usuario = resultados[0];
 
-    return res.status(200).json({mensagem:resultado, token:token});
+    try {
+      const senhaCorreta = await bcrypt.compare(
+        senha,
+        usuario.senha
+      );
+
+      if (!senhaCorreta) {
+        return res.status(401).json({
+          mensagem: "E-mail ou senha inválidos."
+        });
+      }
+
+      const dadosUsuario = {
+        id: usuario.id_usuario,
+        nome: usuario.nome,
+        sobrenome: usuario.sobrenome,
+        email: usuario.email,
+        adm: Boolean(usuario.administrador),
+        id_departamento: usuario.id_departamento
+      };
+
+      const token = jwt.sign(
+        dadosUsuario,
+        process.env.JWT_SECRET,
+        { expiresIn: "8h" }
+      );
+
+      return res.status(200).json({
+        mensagem: "Login realizado com sucesso.",
+        usuario: dadosUsuario,
+        token
+      });
+    } catch (error) {
+      console.error("Erro ao autenticar usuário:", error.message);
+      return res.status(500).json({
+        mensagem: "Erro interno do servidor."
+      });
+    }
   });
 };
 

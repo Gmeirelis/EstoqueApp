@@ -17,7 +17,7 @@ const getCategory = (req, res) => {
 const postCategory = (req, res) => {
   const { nome } = req.body;
 
-  const sql = `INSERT INTO categorias (nome) VALUES (?)`;
+  const sql = `INSERT INTO categorias (categoria_nome) VALUES (?)`;
 
   conexão.query(sql, [nome], (err) => {
     if (err) {

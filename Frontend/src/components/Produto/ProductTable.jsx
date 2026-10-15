@@ -1,10 +1,11 @@
 
 import { useEffect, useState } from "react";
-import SelectDinamico from "../ui/SelectFilter";
 import ModalAction from "../ui/ModalAction";
 import Adiconaritem from "./formItem";
 import IconProduto from "../../utils/Icone";
 import { Trash2 } from "lucide-react";
+import Select from "../../utils/SelectName";
+import API_URL from "../../config/apis";
 
 function TableProduct({ dados,ataulizarLista })  {
 
@@ -17,7 +18,7 @@ const [idItem,setIdItem] = useState({
 
 const apagarItem = async (dados) => {
   try {
-    const API = await fetch("http://localhost:1050/itens/excluir", {
+    const API = await fetch(`${API_URL}/itens/excluir`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"
@@ -33,10 +34,6 @@ const apagarItem = async (dados) => {
   }
 };
 
-
-
- 
- 
  
   return (
 <>
@@ -189,9 +186,10 @@ const apagarItem = async (dados) => {
   
 
 
+
 export default function FilterTablet() {
   const [dados, setDados] = useState([]);
-  const token = localStorage.getItem("token");
+
   
   // 1. Criamos um estado separado para cada filtro
   const [filtroCategoria, setFiltroCategoria] = useState("");
@@ -201,11 +199,7 @@ export default function FilterTablet() {
 console.log(dados)
 
 const buscarDados = () => {
-  fetch("http://localhost:1050/product/itens/produtos", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
+  fetch(`${API_URL}/product/itens/produtos`)
     .then((res) => {
       if (!res.ok) {
         throw new Error("Erro ao buscar API");
@@ -236,7 +230,9 @@ const atualizarLista = (dadosAtuais) => {
 
 
   // 2. Lógica de filtro atualizada para checar a Categoria e o Nome
-  const dadosFiltrados = dados.filter((dado) => {
+const dadosEntrada = dados.filter(dado => dado.tipo === "ENTRADA")
+
+  const dadosFiltrados = dadosEntrada.filter((dado) => {
     let passaCategoria = true;
     let passaNome = true;
 
@@ -262,24 +258,24 @@ const atualizarLista = (dadosAtuais) => {
       
       <div className="flex  gap-5">
         
-        <SelectDinamico
-          nome="Categoria"
-          info="categoria_nome"
-          url="http://localhost:1050/product/itens/categoria"
-          idKey="id_categoria"
-          valor={filtroCategoria} // Propriedade corrigida para 'valor'
-          aoMudar={(valorSelecionado) => setFiltroCategoria(valorSelecionado)} 
-        />
       
-        <SelectDinamico
-          nome="Nome item"
-          info="item_nome" 
-          url="http://localhost:1050/item/filter"
-          idKey="id_item"
-          valor={filtroNome} // Propriedade corrigida para 'valor'
-          aoMudar={(valorSelecionado) => setFiltroNome(valorSelecionado)} 
+      
+        <Select
+        nome="Item"
+        url={`${API_URL}/item/category`}
+        valor={filtroNome}
+        setValor={(valor) => setFiltroNome(valor)}
+        chave="id_item"
+        nomeEntidade="item_nome"
         />
-
+        <Select
+        nome="Selecione a categoria"
+       url={`${API_URL}/item/category`}
+        valor={filtroCategoria}
+        setValor={(valor) => setFiltroCategoria(valor)}
+        chave="id_item"
+        nomeEntidade="categoria_nome"
+        />
 
         <ModalAction buttonText="Adicionar item" modalTitle="Adicione o item"  type="submit" >
           <Adiconaritem atualizarLista={atualizarLista} />

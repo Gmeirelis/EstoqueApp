@@ -6,7 +6,7 @@ export default function Entrada(){
   
     return(
         <>
-       <Header title="Movimentação de estoque" subtitle="Acompanhe as entradas e saídas do seu estoque"/>
+       <Header title="Movimentação de estoque" subtitle="Acompanhe as entradas e saídas do seu estoquee"/>
        <section className="bg-gray-100">
         <div className="flex  gap-9 justify-center">
         </div>

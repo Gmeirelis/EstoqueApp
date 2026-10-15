@@ -10,6 +10,9 @@ export default function Devolution() {
   const [filtroDepartamento, setFiltroDepartamento] = useState("");
   const [filtroColaborador, setFiltroColaborador] = useState("");
   const [dados, setDados] = useState([]);
+ 
+
+ console.log(filtroColaborador,filtroDepartamento)
 
   const buscarDados = async () => {
     try {

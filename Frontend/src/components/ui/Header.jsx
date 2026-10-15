@@ -1,13 +1,23 @@
-import { Search, Bell, Settings } from "lucide-react";
+import {  Bell, Settings } from "lucide-react";
 import icone from "../../assets/icone.png"
-import Config from "../../pages/config";
 import { NavLink } from 'react-router-dom'
+import { useState } from "react";
 
 function Header({
   title,
   subtitle,
   
 }) {
+const usuario = JSON.parse(localStorage.getItem("usuario"));
+
+console.log()
+const name = usuario.usuario?.nome || "Carregando"
+const userName= usuario.usuario?.sobrenome || "....."
+
+const nomeFormatado = name ? name.charAt(0).toUpperCase() + name.slice(1) 
+  : "";
+
+
   return (
     <header className="flex justify-between items-center  border-slate-300  p-1 mt-2 bg-white">
 
@@ -40,7 +50,7 @@ function Header({
           <img src={icone} alt="" />
         </div>
         <div>
-          <p className="text-black font-bold text-md">Guilherme Meireles</p>
+          <p className="text-black font-bold text-md">{`${nomeFormatado } ${userName}`}</p>
          
         </div>
       </div>

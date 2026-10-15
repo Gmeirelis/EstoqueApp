@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import Header from "../../ui/Header";
-import RenderizacaoUsuario from "../../usuario/renderUsuario";
-import ModalUsuario from "../modalUsuario";
-
+import RenderizacaoUsuario from "../componentsUser/renderUsuario.jsx";
+import  ModalUsuario from "../componentsUser/modalUsuario.jsx"
+import API_URL from "../../../config/apis.js";
 
 export default function UserProfile() {
   const [funcionarios, setFuncionarios] = useState([]);
@@ -10,7 +9,7 @@ export default function UserProfile() {
 
   const buscarFuncionarios = async () => {
     try {
-      const resposta = await fetch("http://localhost:1050/funcionarios");
+      const resposta = await fetch(`${API_URL}/funcionarios`);
       const dados = await resposta.json();
       setFuncionarios(dados);
 
@@ -27,7 +26,9 @@ export default function UserProfile() {
     buscarFuncionarios();
   }, []);
 
-  const atualizarFuncionarioNaLista = (funcionarioAtualizado) => {
+
+
+ /* const atualizarFuncionarioNaLista = (funcionarioAtualizado) => {
     setFuncionarios((listaAnterior) =>
       listaAnterior.map((func) =>
         func.id_funcionario === funcionarioAtualizado.id_funcionario
@@ -35,7 +36,7 @@ export default function UserProfile() {
           : func,
       ),
     );
-  };
+  };*/
 
   return (
     <>
@@ -48,6 +49,7 @@ export default function UserProfile() {
               funcionarios={funcionarios}
               idSelecionado={id}
               setId={setId}
+              atualizar={buscarFuncionarios}
             />
           </div>
 
@@ -55,7 +57,7 @@ export default function UserProfile() {
             <ModalUsuario
               id={id}
               funcionarios={funcionarios}
-              aoAtualizarFuncionario={atualizarFuncionarioNaLista}
+              aoAtualizarFuncionario={buscarFuncionarios}
             />
           </div>
         </section>
