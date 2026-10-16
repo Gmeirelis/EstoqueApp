@@ -1,6 +1,7 @@
 import SelectDinamico from "../ui/SelectFilter";
 import { useState } from "react";
 import ModaladdCategory from "./ModaladdCategory";
+import API_URL from "../../config/apis";
 
 export default function AdicionarItem({ atualizarLista }) {
   const [nome, setNome] = useState("");
@@ -34,7 +35,7 @@ export default function AdicionarItem({ atualizarLista }) {
     console.log("Dados que vão para a API:", dadosParaSalvar);
 
     try {
-      const resposta = await fetch("http://localhost:1050/itens/addProduct", {
+      const resposta = await fetch(`${API_URL}/itens/addProduct`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -141,7 +142,7 @@ export default function AdicionarItem({ atualizarLista }) {
           <div className="flex gap-2">
             <SelectDinamico
               nome="Selecione categoria"
-              url="http://localhost:1050/category"
+              url={`${API_URL}/category`}
               info="categoria_nome"
               idKey="id_categoria"
               update={updateCategory}

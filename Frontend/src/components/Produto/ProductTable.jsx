@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import ModalAction from "../ui/ModalAction";
-import Adiconaritem from "./formItem";
+import Adiconaritem from "./FormItem";
 import IconProduto from "../../utils/Icone";
 import { Trash2 } from "lucide-react";
 import Select from "../../utils/SelectName";
@@ -195,8 +195,7 @@ export default function FilterTablet() {
   const [filtroCategoria, setFiltroCategoria] = useState("");
   const [filtroNome, setFiltroNome] = useState("");
 
-  
-console.log(dados)
+
 
 const buscarDados = () => {
   fetch(`${API_URL}/product/itens/produtos`)

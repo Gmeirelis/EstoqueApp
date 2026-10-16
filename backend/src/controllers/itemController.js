@@ -129,7 +129,7 @@ const postItens = (req, res) => {
 
       const sqlinsert = `
 
-        INSERT INTO movimentacoes(id_usuario,id_item,tipo,quantidade,observacao)
+        INSERT INTO movimentacoes(id_item,id_usuario,tipo,quantidade,observacao)
 
         VALUES (?,?,?,?,?);
 
@@ -137,7 +137,7 @@ const postItens = (req, res) => {
 
       conexao.query(
         sqlinsert,
-        [1, novoID, "ENTRADA", 1 , "Cadastro inicial do item"],
+        [ novoID, 7 , "ENTRADA", 1 ,"Cadastro inicial do item"],
         (errMovimento, result) => {
           if (errMovimento) {
             console.log("erro", errMovimento);
