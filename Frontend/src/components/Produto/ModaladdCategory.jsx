@@ -1,4 +1,5 @@
 import { useState } from "react";
+import API_URL from "../../config/apis";
 
 export default function ModaladdCategory({ isModal, setIsmodal, updateState }) {
   const [nameCategory, setNomeCategory] = useState("");
@@ -9,7 +10,7 @@ export default function ModaladdCategory({ isModal, setIsmodal, updateState }) {
     };
 
     try {
-      const resposta = await fetch("http://localhost:1050/category", {
+      const resposta = await fetch(`${API_URL}/category`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

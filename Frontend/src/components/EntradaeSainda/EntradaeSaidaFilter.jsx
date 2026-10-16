@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import CardLog from "./cardEntradaSaida";
+import CardLog from "./CardEntradaSaida";
 import API_URL from "../../config/apis";
 
 // a props dados ela e responsavel de passar os  dados para renderizar,

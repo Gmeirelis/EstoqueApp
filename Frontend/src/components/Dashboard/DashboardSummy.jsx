@@ -2,16 +2,16 @@ import { useState, useEffect } from "react";
 import Card from "../ui/CardFilter";
 /*import { Package, Wrench, Laptop, PackageCheck } from "lucide-react";*/
 import {  Wrench, PackageCheck,Laptop } from "lucide-react";
-
+import API_URL from "../../config/apis";
 
 
 export default function Summary() {
   const [resumo, setResumo] = useState([]);
-
+  console.log(resumo)
 //const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch("http://localhost:1050/product/itens")
+    fetch(`${API_URL}/product/itens`)
       .then((resposta) => resposta.json())
       .then((dados) => {
         setResumo(dados);

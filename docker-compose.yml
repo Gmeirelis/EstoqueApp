@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # 1. BANCO DE DADOS (MySQL)
+  db:
+    image: mysql:8.0
+    container_name: estoque_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: estoque_db
+      MYSQL_USER: estoque_user
+      MYSQL_PASSWORD: estoque_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      # Executa automaticamente o estoqueApp.sql na primeira inicialização
+      - ./database/estoqueApp.sql:/docker-entrypoint-initdb.d/estoqueApp.sql
+
+  # 2. BACKEND (Node.js)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: estoque_backend
+    restart: always
+    ports:
+      - "1050:1050"
+    environment:
+      PORT: 1050
+      DB_HOST: db
+      DB_USER: estoque_user
+      DB_PASSWORD: estoque_password
+      DB_NAME: estoque_db
+      DB_PORT: 3306
+      ADMIN_EMAIL: "admin@estoqueapp.local"
+      ADMIN_PASSWORD: "DefinaUmaSenhaInicialForte"
+    # Executa o script do admin primeiro; se passar sem erro, inicia o server.js
+    command: sh -c "node scripts/createAdmin.js && node server.js"
+    depends_on:
+      - db
+  # 3. FRONTEND (React / Vite)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: estoque_frontend
+    restart: always
+    ports:
+      - "5170:5170"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:

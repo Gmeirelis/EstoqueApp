@@ -3,7 +3,7 @@ import Header from "../components/ui/Header";
 import Tabela from "../components/Emprestimo/tabelaEmprestimo";
 import FiltroEmprestimo from "../components/Emprestimo/FiltroEmprestimo";
 import ModalAction from "../components/ui/ModalAction";
-import AdicionarEmprestimo from "../components/emprestimo/FormEmprestimo";
+import AdicionarEmprestimo from "../components/Emprestimo/FormEmprestimo";
 import { Filter } from "lucide-react";
 
 export default function Devolution() {

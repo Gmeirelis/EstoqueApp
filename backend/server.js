@@ -1,4 +1,3 @@
-
 const express = require('express');
 const cors = require('cors');
 const conexao = require('./src/config/db'); // Ajuste para o caminho real
@@ -8,8 +7,11 @@ const PORT = process.env.PORT || 1050;
 
 app.use(express.json());
 
+// Permite requisições de qualquer origem (IP da rede local, localhost, porta 5170, etc)
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173'
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(require('./src/router/userRouter'));
