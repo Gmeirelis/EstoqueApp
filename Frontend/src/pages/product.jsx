@@ -7,12 +7,12 @@ import { useEffect, useState } from "react";
 function Product() {
   const [products, setProducts] = useState([]);
 
-const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch("http://localhost:1050/product/itens/produtos",{
-      headers:{
-         Authorization: `Bearer ${token}`,
+    fetch("http://localhost:1050/product/itens/produtos", {
+      headers: {
+        Authorization: `Bearer ${token}`,
       }
     })
       .then((res) => {
@@ -29,15 +29,15 @@ const token = localStorage.getItem("token");
 
   return (
     <>
-    <div className="bg-slate-100">
-      <Header
-        title="Produtos"
-        subtitle="Gerencie todos os itens do estoque"
-        buttonText="Nova Entrada"
-      />
-      <div className="flex flex-col justify-center ml-20 mr-20 mt-24 ">
-        <FilterTablet />
-      </div>
+      <div className="bg-slate-100">
+        <Header
+          title="Produtos"
+          subtitle="Gerencie todos os itens do estoque"
+          buttonText="Nova Entrada"
+        />
+        <div className="flex flex-col justify-center ml-20 mr-20 mt-24 ">
+          <FilterTablet />
+        </div>
       </div>
     </>
   );

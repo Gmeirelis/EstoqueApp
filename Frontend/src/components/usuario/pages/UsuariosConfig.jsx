@@ -43,8 +43,8 @@ export default function UserProfile() {
       
 
       <main className="bg-slate-100 h-screen pt-8  ">
-        <section className="flex items-center gap-36  mt-16">
-          <div className="w-96 ml-20 border border-slate-200 rounded-xl overflow-hidden shadow-sm bg-white ">
+        <section className="flex  gap-4  ">
+          <div className="w-96 ml-20 border border-slate-200 rounded-xl overflow-hidden shadow-sm bg-white  ">
             <RenderizacaoUsuario
               funcionarios={funcionarios}
               idSelecionado={id}
@@ -53,7 +53,7 @@ export default function UserProfile() {
             />
           </div>
 
-          <div>
+          <div >
             <ModalUsuario
               id={id}
               funcionarios={funcionarios}

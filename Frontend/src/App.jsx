@@ -7,6 +7,7 @@ import Product from "./pages/product";
 import Devolution from "./pages/emprestados"; 
 import UserProfile from "./components/usuario/pages/UsuariosConfig";
 import Dep from "./components/usuario/pages/dep";
+import Notificacao from "./pages/notificacao";
 import  LayoutUsuario from "./layout/HeaderUsuario";
 import RotaPrivada from "./components/RotaPrivada";
 
@@ -25,7 +26,7 @@ function App() {
         <Route path="/product" element={<Product />} />
         <Route path="/emprestados" element={<Devolution />} />
         <Route path="/entrada" element={<Entrada />} />
-
+        <Route path="/notificacao" element={<Notificacao/>} />
         
            
            {/* usuarios pagina de configuraçoes */}

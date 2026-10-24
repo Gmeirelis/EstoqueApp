@@ -3,12 +3,14 @@ import { IconCalendar } from "@tabler/icons-react";
 import { Undo2 } from "lucide-react";
 import { useState } from "react";
 import API_URL from "../../config/apis";
+import { SearchX } from "lucide-react";
 
 export default function Tabela({
   filtroDepartamento,
   filtroColaborador,
   dados,
-  atualizarDevolucao
+  atualizarDevolucao,
+  limparFiltros,
 }) {
   const [devolucao, setDataDevolucao] = useState({
     id_emprestimo: null,
@@ -29,10 +31,10 @@ export default function Tabela({
 
     const resposta = await API.json();
 
-   console.log(resposta)
-   if(resposta){
-    atualizarDevolucao()
-   }
+    console.log(resposta)
+    if (resposta) {
+      atualizarDevolucao()
+    }
   };
 
   function iniciais(nome) {
@@ -58,6 +60,28 @@ export default function Tabela({
     return departamento && colaborador;
   });
 
+  if (dadosFiltrado.length === 0) {
+    return (
+      <div className="mx-auto flex max-w-md flex-col items-center rounded-2xl border-2 border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-100">
+          <SearchX size={30} className="text-blue-700" />
+        </div>
+        <h2 className="text-lg font-bold text-slate-900">
+          Nenhum empréstimo encontrado
+        </h2>
+        <p className="mb-5 mt-2 text-sm text-slate-500">
+          Não há empréstimos para o departamento ou colaborador selecionado.
+        </p>
+        <button
+          onClick={limparFiltros}
+          className="rounded-lg border border-blue-700 px-5 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-50"
+        >
+          Limpar filtros
+        </button>
+      </div>
+    );
+  }
+  
   return (
     <div className="ml-2 mr-2">
       {isModal && (
@@ -74,10 +98,10 @@ export default function Tabela({
               </button>
 
               <button
-                onClick={ async () => {
+                onClick={async () => {
                   delvoverItem(devolucao);
                   setIsmodal(false);
-                  
+
                 }}
                 className="bg-red-500 text-white px-4 py-2 rounded"
               >
@@ -133,11 +157,10 @@ export default function Tabela({
                 </div>
 
                 <span
-                  className={`text-xs px-3 py-1 rounded-full font-medium ${
-                    devolvido
+                  className={`text-xs px-3 py-1 rounded-full font-medium ${devolvido
                       ? "bg-emerald-100 text-emerald-700"
                       : "bg-amber-100 text-amber-700"
-                  }`}
+                    }`}
                 >
                   {devolvido ? "Devolvido" : "Emprestado"}
                 </span>
@@ -151,21 +174,21 @@ export default function Tabela({
                     {new Date(item.data_emprestimo).toLocaleDateString("pt-BR")}
                   </span>
                 </div>
-               <div>
-                <button
-                  className="text-red-400"
-                  onClick={() => {
-                    const dados = {
-                      id_emprestimo: item.id_emprestimo,
-                      id_item: item.id_item,
-                    };
+                <div>
+                  <button
+                    className="text-red-400"
+                    onClick={() => {
+                      const dados = {
+                        id_emprestimo: item.id_emprestimo,
+                        id_item: item.id_item,
+                      };
 
-                    setDataDevolucao(dados);
-                    setIsmodal(true);
-                  }}
-                >
-                  <Undo2 size={20} />
-                </button>
+                      setDataDevolucao(dados);
+                      setIsmodal(true);
+                    }}
+                  >
+                    <Undo2 size={20} />
+                  </button>
                 </div>
               </div>
             </div>

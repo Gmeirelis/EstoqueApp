@@ -10,7 +10,7 @@ app.use(express.json());
 // Permite requisições de qualquer origem (IP da rede local, localhost, porta 5170, etc)
 app.use(cors({
   origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS','PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 

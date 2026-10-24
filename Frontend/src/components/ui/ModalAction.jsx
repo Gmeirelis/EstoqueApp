@@ -7,7 +7,8 @@ export default function ModalAction({ buttonText, modalTitle, children,type }) {
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
-
+  
+ 
   
   return (
     <>
@@ -38,11 +39,11 @@ export default function ModalAction({ buttonText, modalTitle, children,type }) {
         </button>
        </div>
       </span>
-      <div className="mb-6">
-       
-        {children}
-        
-      </div>
+         <div className="mb-6">
+              {typeof children === "function"
+                ? children({ handleCloseModal })
+                : children}
+            </div>
    
      <div className='flex justify-center'>
     

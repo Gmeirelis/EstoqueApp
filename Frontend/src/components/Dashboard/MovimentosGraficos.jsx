@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {
-  AreaChart,
-  Area,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { TrendingUp } from "lucide-react";
+import API_URL from "../../config/apis";
 
 export default function GraficoMovimentos() {
   const [dados, setDados] = useState([]);
@@ -16,7 +17,7 @@ export default function GraficoMovimentos() {
   useEffect(() => {
     async function buscarDados() {
       try {
-        const api = await fetch("http://localhost:1050/movimentos/porData");
+        const api = await fetch(`${API_URL}/movimentos/porData`);
 
         if (!api.ok) {
           throw new Error("Erro ao buscar dados");
@@ -42,7 +43,22 @@ export default function GraficoMovimentos() {
   }, []);
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+    <div 
+    className="
+    bg-white rounded-2xl
+    border-gray-100 
+    shadow-sm  
+    w-full 
+    min-h-96 
+    border-2 
+    p-2
+    transition-all 
+    duration-200
+    hover:-translate-y-1 
+    hover:shadow-lg 
+    hover:border-grey-200
+    
+    ">
       {/* Cabeçalho */}
       <div className="flex items-start justify-between mb-6">
         <div className="flex items-start gap-3">
@@ -67,14 +83,7 @@ export default function GraficoMovimentos() {
       {/* Gráfico */}
       <div className="w-full h-[320px]">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={dados} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-            <defs>
-              <linearGradient id="corEntradas" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#1a5a3a" stopOpacity={0.25} />
-                <stop offset="95%" stopColor="#1a5a3a" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-
+          <BarChart data={dados} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
 
             <XAxis
@@ -91,6 +100,7 @@ export default function GraficoMovimentos() {
             />
 
             <Tooltip
+              cursor={{ fill: "#f9fafb" }}
               contentStyle={{
                 borderRadius: 12,
                 border: "1px solid #e5e7eb",
@@ -98,24 +108,18 @@ export default function GraficoMovimentos() {
               }}
             />
 
-            <Area
-              type="monotone"
+            <Bar
               dataKey="total"
-              stroke="#1a5a3a"
-              strokeWidth={2.5}
-              fill="url(#corEntradas)"
-              dot={{ r: 4, fill: "#fff", stroke: "#1a5a3a", strokeWidth: 2 }}
-              activeDot={{ r: 6 }}
+              fill="#1a5a3a"
+              radius={[6, 6, 0, 0]}
+              maxBarSize={40}
             />
-          </AreaChart>
+          </BarChart>
         </ResponsiveContainer>
       </div>
 
       {/* Legenda */}
-      <div className="flex items-center gap-2 mt-2 justify-center">
-        <span className="w-3 h-0.5 bg-[#1a5a3a] inline-block rounded-full" />
-        <span className="text-sm text-gray-600">Entradas</span>
-      </div>
+      
     </div>
   );
 }

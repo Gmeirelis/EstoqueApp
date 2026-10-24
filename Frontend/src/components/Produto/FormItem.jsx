@@ -2,11 +2,11 @@ import SelectDinamico from "../ui/SelectFilter";
 import { useState } from "react";
 import ModaladdCategory from "./ModaladdCategory";
 import API_URL from "../../config/apis";
+import { useRef } from "react";
+import { productSchema } from "../../schema/productShema";
 
 export default function AdicionarItem({ atualizarLista }) {
   const [nome, setNome] = useState("");
-  const [quantidade, setQuantidade] = useState("");
-  const [departamento, setDepartamento] = useState("");
   const [categoria, setCategoria] = useState("");
   const [marca, setMarca] = useState("");
   const [modelo, setModelo] = useState("");
@@ -14,6 +14,11 @@ export default function AdicionarItem({ atualizarLista }) {
   const [isModal, setIsModal] = useState(false);
   const [updateSelectCategory, setUpdateCategory] = useState(0);
   const [saved, setSaved] = useState(false);
+  const [carregando, setCarregando] = useState(false)
+  const [error,setError] = useState({})
+
+
+  const enviandoRef = useRef(false);
 
   const updateCategory = () => setUpdateCategory((prev) => prev + 1);
 
@@ -23,16 +28,47 @@ export default function AdicionarItem({ atualizarLista }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const dadosParaSalvar = {
-      id_departamento: Number(departamento),
-      nome: nome,
-      marca: marca,
-      modelo: modelo,
+    // Impede múltiplos envios, inclusive cliques muito rápidos
+    if (enviandoRef.current) return;
+
+  const dadosParaSalvar = {
+      nome,
+      marca,
+      modelo,
       id_categoria: Number(categoria),
-      descricao: descricao,
-      quantidade: Number(quantidade),
+      descricao,
     };
-    console.log("Dados que vão para a API:", dadosParaSalvar);
+
+
+  const resultado = productSchema.safeParse(dadosParaSalvar)
+
+if(!resultado.success){
+
+const novosErros={};
+
+resultado.error.issues.forEach((issue)=>{
+  const campo = issue.path[0];
+
+
+if(campo && !novosErros[campo]){
+  novosErros[campo] = issue.message;
+}
+
+});
+
+setError(novosErros)
+return
+
+}
+
+    enviandoRef.current = true;
+    setCarregando(true);
+    setError({})
+    setSaved(false);
+
+  
+
+    
 
     try {
       const resposta = await fetch(`${API_URL}/itens/addProduct`, {
@@ -42,130 +78,151 @@ export default function AdicionarItem({ atualizarLista }) {
         },
         body: JSON.stringify(dadosParaSalvar),
       });
-      const dadosApi = await resposta.json();
-      console.log("dados que chega da api", dadosApi.dados);
+
+      if (!resposta.ok) {
+        throw new Error(`Erro HTTP: ${resposta.status}`);
+      }
+
       if (resposta.ok) {
-        atualizarLista(dadosApi.dados);
         setNome("");
-        setQuantidade("");
-        setDepartamento("");
         setCategoria("");
+        setMarca("");
+        setModelo("");
+        setDescricao("");
+        setSaved(true);
+        atualizarLista();
+
+        setTimeout(() => {
+          setSaved(false);
+        }, 3000);
       }
     } catch (erro) {
-      console.error("Erro:", erro);
+      console.error("Erro ao cadastrar item:", erro);
+      alert("Não foi possível cadastrar o item. Tente novamente.");
+    } finally {
+      enviandoRef.current = false;
+      setCarregando(false);
     }
-
-    setSaved(true);
-
-    setTimeout(() => {
-      setSaved(false);
-    }, 3000);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+    <>
       {saved && (
         <div className="mb-4 p-3 bg-green-50 border border-green-300 rounded-lg text-green-700 text-sm flex items-center gap-2 animate-slideIn">
           <span>✓</span>
           <span>Produto adicionado com sucesso</span>
         </div>
       )}
-      <ModaladdCategory
-        isModal={isModal}
-        setIsmodal={() => closeIsmodal()}
-        updateState={updateCategory}
-      />
-      <span className="flex gap-3.5 ">
-        <div className="flex flex-col">
-          <label className="text-gray-700 font-semibold mb-1">
-            Nome do item:
-          </label>
-          <input
-            type="text"
-            placeholder="Digite o nome do item"
-            value={nome} // Ligar ao estado
-            onChange={(e) => setNome(e.target.value)} // Atualizar estado
-            required
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
-          />
-        </div>
 
-        <div className="flex flex-col">
-          <label className="text-gray-700 font-semibold mb-1">
-            Marca do item:
-          </label>
-          <input
-            type="text"
-            placeholder="Digite o nome do item"
-            value={marca} // Ligar ao estado
-            onChange={(e) => setMarca(e.target.value)} // Atualizar estado
-            required
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
-          />
-        </div>
-      </span>
 
-      <span className="flex gap-3.5 ">
-        <div className="flex flex-col">
-          <label className="text-gray-700 font-semibold mb-1">
-            Modelo do item:
-          </label>
-          <input
-            type="text"
-            placeholder="Digite o nome do item"
-            value={modelo} // Ligar ao estado
-            onChange={(e) => setModelo(e.target.value)} // Atualizar estado
-            required
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
-          />
-        </div>
 
-        <div className="flex flex-col">
-          <label className="text-gray-700 font-semibold mb-1">Descricao:</label>
-          <input
-            type="text"
-            placeholder="Digite o nome do item"
-            value={descricao} // Ligar ao estado
-            onChange={(e) => setDescricao(e.target.value)} // Atualizar estado
-            required
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
-          />
-        </div>
-      </span>
-     
-      <div className="flex gap-11">
-        <div className="flex flex-col w-full ">
-          <label className="text-gray-700 font-semibold mb-1">
-            Categoria do item:
-          </label>
-          {/* ATENÇÃO AQUI: Você precisa garantir que o seu componente SelectDinamico repasse o valor selecionado para a função onChange */}
-          <div className="flex gap-2">
-            <SelectDinamico
-              nome="Selecione categoria"
-              url={`${API_URL}/category`}
-              info="categoria_nome"
-              idKey="id_categoria"
-              update={updateCategory}
-              valor={categoria}
-              aoMudar={(valorSelecionado) => setCategoria(valorSelecionado)}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+
+        <ModaladdCategory
+          isModal={isModal}
+          setIsmodal={() => closeIsmodal()}
+          updateState={updateCategory}
+        />
+        <span className="flex gap-3.5 ">
+          <div className="flex flex-col">
+            <label className="text-gray-700 font-semibold mb-1">
+              Nome do item:
+            </label>
+            <input
+              type="text"
+              placeholder="Digite o nome do item"
+              value={nome} // Ligar ao estado
+              onChange={(e) => setNome(e.target.value)} // Atualizar estado
+              required
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
             />
-
-            <button className="text-2xl" onClick={() => openIsmodal()}>
-              +
-            </button>
+            {error.nome &&(
+              <p>{error.nome}</p>
+            )}
           </div>
-        </div>
 
-       
-      </div>
-      <div>
-        <button
-          type="submit"
-          className="mt-4 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-all duration-500 ease-in-out hover:bg-blue-800"
-        >
-          Salvar item
-        </button>
-      </div>
-    </form>
+          <div className="flex flex-col">
+            <label className="text-gray-700 font-semibold mb-1">
+              Marca do item:
+            </label>
+            <input
+              type="text"
+              placeholder="Digite o nome do item"
+              value={marca} // Ligar ao estado
+              onChange={(e) => setMarca(e.target.value)} // Atualizar estado
+              required
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
+            />
+          </div>
+        </span>
+
+        <span className="flex gap-3.5 ">
+          <div className="flex flex-col">
+            <label className="text-gray-700 font-semibold mb-1">
+              Modelo do item:
+            </label>
+            <input
+              type="text"
+              placeholder="Digite o nome do item"
+              value={modelo} // Ligar ao estado
+              onChange={(e) => setModelo(e.target.value)} // Atualizar estado
+              required
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="text-gray-700 font-semibold mb-1">Descricao:</label>
+            <input
+              type="text"
+              placeholder="Digite o nome do item"
+              value={descricao} // Ligar ao estado
+              onChange={(e) => setDescricao(e.target.value)} // Atualizar estado
+              required
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
+            />
+          </div>
+        </span>
+
+        <div className="flex gap-11">
+          <div className="flex flex-col w-full ">
+            <label className="text-gray-700 font-semibold mb-1">
+              Categoria do item:
+            </label>
+            {/* ATENÇÃO AQUI: Você precisa garantir que o seu componente SelectDinamico repasse o valor selecionado para a função onChange */}
+            <div className="flex gap-2 ">
+              <SelectDinamico
+                nome="Selecione categoria"
+                url={`${API_URL}/category`}
+                info="categoria_nome"
+                idKey="id_categoria"
+                update={updateCategory}
+                valor={categoria}
+                aoMudar={(valorSelecionado) => setCategoria(valorSelecionado)}
+              />
+
+              <button
+                className="text-2xl"
+                onClick={() => openIsmodal()}
+                type="button"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+
+        </div>
+        <div>
+          <button
+            type="submit"
+            disabled={carregando}
+            className="mt-4 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {carregando ? "Salvando..." : "Salvar Item"}
+          </button>
+        </div>
+      </form>
+    </>
   );
 }

@@ -23,7 +23,8 @@ export default function Summary() {
   // Dica de legibilidade: use 'item' no singular, pois o filter analisa um por vez
   const dadosfiltrados = resumo.filter(item => item.item_status === "ATIVO" || "MANUTENCAO");
   const filtroManutencao = dadosfiltrados.filter(item => item.item_status === "MANUTENCAO")
-  const filtroEmuso = dadosfiltrados.filter(item =>item.situal_emprestimo === "INDISPONIVEL")
+  const filtroEmuso = dadosfiltrados.filter(item =>item.situal_emprestimo === "DISPONIVEL")
+  const filtroEmprestado = dadosfiltrados.filter(item =>item.situal_emprestimo === "INDISPONIVEL")
   //const filtroDisponivel = dadosfiltrados.filter(item => item.situal_emprestimo === "DISPONIVEL")
   console.log(resumo)
   console.log(filtroManutencao)
@@ -49,7 +50,7 @@ export default function Summary() {
       />
           <Card 
         icone={Laptop} 
-        numero={filtroEmuso.length} 
+        numero={filtroEmprestado.length} 
         name="emprestado" 
       />
     </div>

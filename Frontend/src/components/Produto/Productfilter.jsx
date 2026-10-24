@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import API_URL from "../../config/apis";
+
+
 function FullProduct({ title, full }) {
   return (
     <div className="flex flex-col border-2 border-slate-200 text-center p-5 rounded-3xl mb-4">

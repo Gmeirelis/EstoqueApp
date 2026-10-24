@@ -7,6 +7,8 @@ const { param } = require("../router/itemRouter");
 
 const postEmprestimo = (req, res) => {
 
+ const usuario = req.usuario.id;
+
   const {
     id_item,
     id_funcionario,
@@ -49,6 +51,9 @@ const postEmprestimo = (req, res) => {
   // =========================
 
   function inserirEmprestimo() {
+
+ 
+
     const sql = `
       INSERT INTO emprestimos (
         id_item,
@@ -65,7 +70,7 @@ const postEmprestimo = (req, res) => {
     const valores = [
       id_item,
       id_funcionario,
-      idUsuario,
+      usuario,
       data_emprestimo,
       devolucao,
       "EMPRESTADO",
@@ -170,6 +175,7 @@ const postEmprestimo = (req, res) => {
   // =========================
 
   function registrarMovimentacao(idEmprestimo, dadosEmprestimo) {
+
     const sql = `
       INSERT INTO movimentacoes (
         id_item,
@@ -183,7 +189,7 @@ const postEmprestimo = (req, res) => {
 
     const valores = [
       id_item,
-      idUsuario,
+      usuario,
       "SAIDA",
       1,
       observacao,
@@ -245,36 +251,112 @@ const postEmprestimo = (req, res) => {
 };
 
 /* função para devolução de item */
+
 const puttDevoluçao = (req, res) => {
-  const { id_emprestimo, id_item } = req.body;
+  const { id_emprestimo } = req.body;
 
-  // vai fazer o update na tabela emprestimos
-  const InsertSQlupdate = `
-    UPDATE emprestimos
-    SET status = "DEVOLVIDO"
-    WHERE id_emprestimo = ?;
-  `;
+  if (!id_emprestimo) {
+    return res.status(400).json({
+      mensagem: "ID do empréstimo não informado",
+    });
+  }
 
-  conexao.query(InsertSQlupdate, [id_emprestimo], (err) => {
+  conexao.beginTransaction((err) => {
     if (err) {
-      console.log("erro", err);
-      return res.status(500).json("error internal 500");
+      console.error("Erro ao iniciar transação:", err);
+      return res.status(500).json({
+        mensagem: "Erro ao iniciar devolução",
+      });
     }
 
-    // vai fazer update na tabela item
-    const SqlUpdateItem = `
-      UPDATE itens
-      SET situal_emprestimo = "DISPONIVEL"
-      WHERE id_item = ?;
+    // Busca o item vinculado ao empréstimo ainda ativo
+    const sqlBusca = `
+      SELECT id_item
+      FROM emprestimos
+      WHERE id_emprestimo = ?
+        AND status = 'EMPRESTADO'
+      FOR UPDATE;
     `;
 
-    conexao.query(SqlUpdateItem, [id_item], (err) => {
+    conexao.query(sqlBusca, [id_emprestimo], (err, resultado) => {
       if (err) {
-        console.log("erro ao atualizar na tabela item", err);
-        return res.status(500).json("erro server internal");
+        return conexao.rollback(() => {
+          console.error("Erro ao buscar empréstimo:", err);
+          return res.status(500).json({
+            mensagem: "Erro ao buscar empréstimo",
+          });
+        });
       }
 
-      return res.status(200).json("item devolvido");
+      if (resultado.length === 0) {
+        return conexao.rollback(() => {
+          return res.status(404).json({
+            mensagem: "Empréstimo não encontrado ou já devolvido",
+          });
+        });
+      }
+
+      const id_item = resultado[0].id_item;
+
+      // Atualiza o empréstimo
+      const sqlEmprestimo = `
+        UPDATE emprestimos
+        SET status = 'DEVOLVIDO',
+            data_devolucao = NOW()
+        WHERE id_emprestimo = ?
+          AND status = 'EMPRESTADO';
+      `;
+
+      conexao.query(
+        sqlEmprestimo,
+        [id_emprestimo],
+        (err, resultadoUpdate) => {
+          if (err || resultadoUpdate.affectedRows !== 1) {
+            return conexao.rollback(() => {
+              console.error("Erro ao atualizar empréstimo:", err);
+              return res.status(500).json({
+                mensagem: "Não foi possível registrar a devolução",
+              });
+            });
+          }
+
+          // Atualiza a disponibilidade do item
+          const sqlItem = `
+            UPDATE itens
+            SET situal_emprestimo = 'DISPONIVEL'
+            WHERE id_item = ?;
+          `;
+
+          conexao.query(sqlItem, [id_item], (err, resultadoItem) => {
+            if (err || resultadoItem.affectedRows !== 1) {
+              return conexao.rollback(() => {
+                console.error("Erro ao atualizar item:", err);
+                return res.status(500).json({
+                  mensagem: "Não foi possível liberar o item",
+                });
+              });
+            }
+
+            // Confirma as duas alterações
+            conexao.commit((err) => {
+              if (err) {
+                return conexao.rollback(() => {
+                  console.error("Erro ao confirmar transação:", err);
+                  return res.status(500).json({
+                    mensagem: "Erro ao confirmar devolução",
+                  });
+                });
+              }
+
+              return res.status(200).json({
+                mensagem: "Item devolvido com sucesso",
+                id_emprestimo,
+                id_item,
+              });
+            });
+          });
+        }
+      );
     });
   });
 };
@@ -331,9 +413,34 @@ JOIN departamentos d on f.id_departamento = d.id_departamento;;
   });
 };
 
+const getEmprestimoAtrasado = (req,res) =>{
+ 
+
+const getSql =`SELECT e.id_emprestimo, e.data_emprestimo,e.data_prevista_devolucao,e.data_devolucao,i.item_nome,i.item_marca,f.funcionario_nome FROM emprestimos e
+join itens i on e.id_item = i.id_item
+join funcionarios f on e.id_funcionario = f.id_funcionario
+WHERE e.data_prevista_devolucao < DATE_ADD(CURDATE(), INTERVAL 3 DAY)
+  AND e.data_devolucao IS NULL && e.status = "EMPRESTADO";`
+
+conexao.query(getSql,(err,result)=>{
+
+  if(err){
+    console.log("error interno",err)
+    return res.status(500).json({mensagem:"error internal"})
+  }
+
+  return res.status(200).json(result)
+
+})
+
+
+
+}
+
 module.exports = {
   postEmprestimo,
   getEmprestimo,
   selectEmprestimo,
   puttDevoluçao,
+  getEmprestimoAtrasado
 };

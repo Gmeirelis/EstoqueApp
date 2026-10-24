@@ -185,6 +185,7 @@ const postItens = (req, res) => {
   );
 };
 
+
 const deleteItens = (req, res) => {
   const { id } = req.params;
 
@@ -244,6 +245,7 @@ LIMIT 5;`;
     return res.status(200).json(resultado);
   });
 };
+
 
 /*renderiza logs de produtos */
 const itensLogs = (req, res) => {
@@ -378,6 +380,9 @@ conexao.query(getSql,(err,resultado)=>{
   return res.status(200).json(resultado)
 })
 }
+
+
+
 
 
 module.exports = {

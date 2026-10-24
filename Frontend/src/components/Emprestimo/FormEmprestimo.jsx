@@ -2,19 +2,19 @@ import SelectDinamico from "../ui/SelectFilter";
 import { useState } from "react";
 import API_URL from "../../config/apis";
 
-export default function AdicionarEmprestimo({ atualizaremprestimo }) {
+export default function AdicionarEmprestimo({ atualizaremprestimo,setIsModal }) {
   const [item, setItem] = useState("");
   const [funcionario, setFuncionario] = useState("");
   const [dataEmprestimo, setDataEmprestimo] = useState("");
   const [dataDevolucao, setDataDevolucao] = useState("");
   const [Observacao, setObservacao] = useState("");
-
+  
   // Adicionado para dar feedback visual na tela
+  const [carregando, setCarregando] = useState(false);
 
-
-
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
+    setCarregando(true); // Desabilita o botão ao iniciar a requisição
 
     const dataSalve = {
       id_item: item,
@@ -24,35 +24,39 @@ export default function AdicionarEmprestimo({ atualizaremprestimo }) {
       observacao: Observacao,
     };
 
-
     try {
-     
-const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
       const resposta = await fetch(`${API_URL}/emprestimo`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(dataSalve),
       });
 
-    
-
       const informacao = await resposta.json();
-
-     
 
       if (resposta.ok) {
         atualizaremprestimo(informacao.dados);
+        
+        // Limpa os campos após o envio bem-sucedido
+        setItem("");
+        setFuncionario("");
+        setDataEmprestimo("");
+        setDataDevolucao("");
+        setObservacao("");
+        setIsModal()
       } else {
         console.log("ERRO HTTP:", resposta.status);
       }
-
     } catch (erro) {
       console.log("erro no fetch", erro);
+    } finally {
+      setCarregando(false); // Reabilita o botão após a finalização (sucesso ou erro)
     }
   };
+  
   return (
     <form className="w-full max-w-3xl rounded-2xl p-8 " onSubmit={handleSubmit}>
       {/* Cabeçalho */}
@@ -128,7 +132,7 @@ const token = localStorage.getItem("token");
           transition
           focus:bg-white
           focus:ring-2
-          focus:ring-green-100
+          focus:ring-blue-100
         "
           />
         </div>
@@ -160,9 +164,9 @@ const token = localStorage.getItem("token");
           outline-none
           transition
           focus:bg-white
-          focus:border-green-500
+          focus:border-blue-500
           focus:ring-2
-          focus:ring-green-100
+          focus:ring-blue-100
         "
           />
         </div>
@@ -197,9 +201,9 @@ const token = localStorage.getItem("token");
         outline-none
         transition
         focus:bg-white
-        focus:border-green-500
+        focus:border-blue-500
         focus:ring-2
-        focus:ring-green-100
+        focus:ring-blue-100
       "
         />
       </div>
@@ -208,23 +212,24 @@ const token = localStorage.getItem("token");
       <div className="flex flex-col-reverse sm:flex-row gap-3 mt-8">
         <button
           type="submit"
+          disabled={carregando}
           className="
          w-3xs
         sm:flex-1
-        bg-green-600
+        bg-blue-600
         text-white
         font-semibold
         py-3
         px-6
         rounded-lg
         shadow-sm
-        hover:bg-green-700
+        hover:bg-blue-700
         active:scale-[0.99]
         transition
         duration-200
       "
         >
-          Salvar empréstimo
+       {carregando ? "Enviando..." : "Salvar empréstimo"}
         </button>
       </div>
     </form>

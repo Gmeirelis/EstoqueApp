@@ -14,7 +14,8 @@ function TableProduct({ dados, enviaDados }) {
   }
 
   return (
-    <div className="w-full max-w-7xl overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+    <div className="w-full max-w-7xl rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <div className="w-full max-w-7xl max-h-[500px] overflow-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
       <table className="w-full text-sm">
         <thead>
           <div className="flex p-3 gap-6">
@@ -137,6 +138,7 @@ function TableProduct({ dados, enviaDados }) {
           )}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

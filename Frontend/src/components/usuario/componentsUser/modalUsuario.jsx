@@ -207,7 +207,7 @@ export default function ModalUsuario({
   }
 
   return (
-    <div key={info.id_funcionario} className="bg-white">
+    <div key={info.id_funcionario} className="bg-white flex-1 w-2xl">
       <ModalDelete
         ismodal={isModal}
         setISmodal={(dado) => setIsModal(dado)}

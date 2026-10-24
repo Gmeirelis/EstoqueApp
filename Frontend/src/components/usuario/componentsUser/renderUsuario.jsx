@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ObterIniciais from "../../../utils/funcaoIniciais";
 import API_URL from "../../../config/apis";
+import { userSchema } from "../../../schema/userSchema";
 
 function SelectUser({ idDep }) {
   const [dados, SetDados] = useState([]);
@@ -35,7 +36,7 @@ function SelectUser({ idDep }) {
 
   return (
     <select
-    className="p-2 border border-gray-300 rounded-lg w-44 bg-white h-10 px-3 text-sm"
+      className="p-2 border border-gray-300 rounded-lg w-44 bg-white h-10 px-3 text-sm"
       name="Departamento"
       value={idSelect}
       onChange={(e) => getIdDep(Number(e.target.value))}
@@ -56,24 +57,64 @@ function SelectUser({ idDep }) {
 {
   /* props ismodal recebe o valor true do com pai e abre o modal,setismodal excuta um funcao que recebe false para fehcar o modal*/
 }
-function ModalAddUser({ isModal, setIsmodal,atualizar }) {
+function ModalAddUser({ isModal, setIsmodal, atualizar }) {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
   const [cargo, setCargo] = useState("");
   const [departaments, setDepartaments] = useState("");
+  const [loading, setLoading] = useState(false)
+
+  const [errors, setErrors] = useState({});
+
+  const enviandoRef = useRef(false);
+
 
   async function handleSubmit(e) {
     e.preventDefault();
 
+
+    if (enviandoRef.current) return;
+      const user = {
+    nome,
+    email,
+    telefone,
+    cargo,
+    
+  };
+ const resultado = userSchema.safeParse(user);
+
+ if (!resultado.success) {
+    const novosErros = {};
+
+    resultado.error.issues.forEach((issue) => {
+      const campo = issue.path[0];
+
+      if (campo && !novosErros[campo]) {
+        novosErros[campo] = issue.message;
+      }
+    });
+
+    setErrors(novosErros);
+    return;
+  }
+
+    enviandoRef.current = true;
+    setErrors({});
+    setLoading(true);
+
+
+
     const dadosUser = {
       funcionario_nome: nome,
-      email: email,
-      telefone: telefone,
-      cargo: cargo,
-      id_departamento: departaments,
+      email,
+      telefone,
+      cargo,
+      id_departamento: Number(departaments),
     };
 
+
+    console.log(nome.length)
     try {
       const resposta = await fetch(`${API_URL}/funcionarios`, {
         method: "POST",
@@ -83,18 +124,30 @@ function ModalAddUser({ isModal, setIsmodal,atualizar }) {
         body: JSON.stringify(dadosUser),
       });
 
-      if (!resposta) {
-        throw new Error("error ao criar funcionario");
+      if (!resposta.ok) {
+        throw new Error("Erro ao criar funcionário");
       }
 
       const data = await resposta.json();
-      atualizar()
+
+      setNome("");
+      setDepartaments("");
+      setEmail("");
+      setTelefone("");
+      setCargo("");
+
+      atualizar();
+      setIsmodal(false);
+
       console.log(data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+    } finally {
+
+      enviandoRef.current = false;
+      setLoading(false);
     }
   }
-
   return (
     <>
       {isModal && (
@@ -133,10 +186,18 @@ function ModalAddUser({ isModal, setIsmodal,atualizar }) {
                   name="nome"
                   type="text"
                   placeholder="Ex: João Silva"
-                  className="h-11 px-3 rounded-lg border border-slate-300 outline-none
-        focus:border-blue-500 focus:ring-2 focus:ring-blue-100
-        transition"
+                  className={`h-11 px-3 rounded-lg border outline-none transition
+  focus:ring-2 focus:ring-blue-100
+  ${errors.nome
+                      ? "border-red-500 focus:border-red-500"
+                      : "border-slate-300 focus:border-blue-500"
+                    }`}
                 />
+                {errors.nome && (
+                  <p className="text-sm text-red-600">
+                    {errors.nome}
+                  </p>
+                )}
               </div>
 
               {/* Email */}
@@ -155,10 +216,18 @@ function ModalAddUser({ isModal, setIsmodal,atualizar }) {
                   placeholder="Ex: joao@empresa.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-11 px-3 rounded-lg border border-slate-300 outline-none
-        focus:border-blue-500 focus:ring-2 focus:ring-blue-100
-        transition"
+                  className={`h-11 px-3 rounded-lg border outline-none transition
+  focus:ring-2 focus:ring-blue-100
+  ${errors.email
+                      ? "border-red-500 focus:border-red-500"
+                      : "border-slate-300 focus:border-blue-500"
+                    }`}
                 />
+                {errors.email && (
+                  <p className="text-sm text-red-600">
+                    {errors.email}
+                  </p>
+                )}
               </div>
 
               {/* Telefone */}
@@ -177,10 +246,18 @@ function ModalAddUser({ isModal, setIsmodal,atualizar }) {
                   placeholder="Ex: (95) 8232-2322"
                   value={telefone}
                   onChange={(e) => setTelefone(e.target.value)}
-                  className="h-11 px-3 rounded-lg border border-slate-300 outline-none
-        focus:border-blue-500 focus:ring-2 focus:ring-blue-100
-        transition"
+                  className={`h-11 px-3 rounded-lg border outline-none transition
+  focus:ring-2 focus:ring-blue-100
+  ${errors.telefone
+                      ? "border-red-500 focus:border-red-500"
+                      : "border-slate-300 focus:border-blue-500"
+                    }`}
                 />
+                {errors.telefone && (
+                  <p className="text-sm text-red-600">
+                    {errors.telefone}
+                  </p>
+                )}
               </div>
 
               {/* Cargo */}
@@ -199,10 +276,18 @@ function ModalAddUser({ isModal, setIsmodal,atualizar }) {
                   placeholder="Ex: Diretor"
                   value={cargo}
                   onChange={(e) => setCargo(e.target.value)}
-                  className="h-11 px-3 rounded-lg border border-slate-300 outline-none
-        focus:border-blue-500 focus:ring-2 focus:ring-blue-100
-        transition"
+                  className={`h-11 px-3 rounded-lg border outline-none transition
+  focus:ring-2 focus:ring-blue-100
+  ${errors.cargo
+                      ? "border-red-500 focus:border-red-500"
+                      : "border-slate-300 focus:border-blue-500"
+                    }`}
                 />
+                {errors.cargo && (
+                  <p className="text-sm text-red-600">
+                    {errors.cargo}
+                  </p>
+                )}
               </div>
 
               {/* Departamento */}
@@ -213,6 +298,13 @@ function ModalAddUser({ isModal, setIsmodal,atualizar }) {
 
                 {/* essa prop passar o valor do dep selecionado*/}
                 <SelectUser idDep={setDepartaments} />
+
+
+                {errors.departamento && (
+                  <p className="text-sm text-red-600">
+                    {errors.departamento}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -228,16 +320,17 @@ function ModalAddUser({ isModal, setIsmodal,atualizar }) {
               </button>
 
               <button
+                disabled={loading}
                 type="submit"
                 className="px-5 py-2.5 rounded-lg bg-blue-600
-      text-white font-medium hover:bg-blue-700
-      focus:ring-2 focus:ring-blue-200 transition"
+               text-white font-medium hover:bg-blue-700
+               focus:ring-2 focus:ring-blue-200 transition"
               >
-                Adicionar Usuário
+                {loading ? "Salvando..." : " Adicionar Usuário"}
               </button>
             </div>
           </form>
-          ```
+
         </div>
       )}
     </>
@@ -290,52 +383,51 @@ export default function RenderizacaoUsuario({
         />
 
         <div className="flex justify-center p-2">
-          <button 
-           className="w-full mt-3 py-2.5 rounded-lg
+          <button
+            className="w-full mt-3 py-2.5 rounded-lg
       text-sm font-medium text-blue-600
       border border-blue-200
       hover:bg-blue-50 transition"
-          onClick={() => setIsmodal(true)}>+ Adicionar usuario</button>
+            onClick={() => setIsmodal(true)}>+ Adicionar usuario</button>
         </div>
       </div>
-      <ModalAddUser isModal={isModal} setIsmodal={setIsmodal}  atualizar={atualizar}/>
+      <ModalAddUser isModal={isModal} setIsmodal={setIsmodal} atualizar={atualizar} />
 
       {/* Lista de usuários */}
-<div className="flex flex-col max-h-[500px] overflow-y-auto">
-  {dadosFiltrados.map((info) => (
-    <div
-      key={info.id_funcionario}
-      onClick={() => setId(info.id_funcionario)}
-      className={`p-3 cursor-pointer border-b border-slate-200 transition duration-150 ${
-        idSelecionado === info.id_funcionario
-          ? "bg-blue-50 border-l-4 border-l-blue-500"
-          : "bg-white hover:bg-slate-50 border-l-4 border-l-transparent"
-      }`}
-    >
-      <div className="flex gap-3 items-center">
-        <div>
-          <p
-            className={`w-10 h-10 flex items-center justify-center font-bold text-white rounded-full text-sm ${ObterCorAvatar(
-              info.funcionario_nome
-            )}`}
+      <div className="flex flex-col max-h-[500px] overflow-y-auto">
+        {dadosFiltrados.map((info) => (
+          <div
+            key={info.id_funcionario}
+            onClick={() => setId(info.id_funcionario)}
+            className={`p-3 cursor-pointer border-b border-slate-200 transition duration-150 ${idSelecionado === info.id_funcionario
+              ? "bg-blue-50 border-l-4 border-l-blue-500"
+              : "bg-white hover:bg-slate-50 border-l-4 border-l-transparent"
+              }`}
           >
-            {ObterIniciais(info.funcionario_nome)}
-          </p>
-        </div>
+            <div className="flex gap-3 items-center">
+              <div>
+                <p
+                  className={`w-10 h-10 flex items-center justify-center font-bold text-white rounded-full text-sm ${ObterCorAvatar(
+                    info.funcionario_nome
+                  )}`}
+                >
+                  {ObterIniciais(info.funcionario_nome)}
+                </p>
+              </div>
 
-        <div>
-          <p className="font-medium text-slate-700">
-            {info.funcionario_nome}
-          </p>
+              <div>
+                <p className="font-medium text-slate-700">
+                  {info.funcionario_nome}
+                </p>
 
-          <p className="font-light text-sm text-slate-500">
-            {info.cargo}
-          </p>
-        </div>
+                <p className="font-light text-sm text-slate-500">
+                  {info.cargo}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
-  ))}
-</div>
     </div>
   );
 }
