@@ -1,4 +1,4 @@
-import { LayoutGrid, Package, ArrowDownToLine, Users,  ArrowLeftRight,Bell } from 'lucide-react'
+import { LayoutGrid, Package, ArrowDownToLine, Users,  ArrowLeftRight,LogOut} from 'lucide-react'
 import caixa from '../assets/caixa.png'
 import { NavLink } from 'react-router-dom'
 
@@ -52,6 +52,11 @@ function Sidebar() {
 
         <NavSection>
           <NavItem icon={Users} label="Usuários" to="/usuario" />
+        
+        </NavSection>
+
+         <NavSection>
+          <NavItem icon={LogOut} label="Sair" to="/login" />
         
         </NavSection>
          

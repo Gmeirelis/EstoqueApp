@@ -6,23 +6,58 @@ const { param } = require("../router/itemRouter");
 const excluirItem = (req, res) => {
   const { id_item } = req.body;
 
+  const selectSql = `
+    SELECT situal_emprestimo
+    FROM itens
+    WHERE id_item = ?
+  `;
+
   const updateSql = `
     UPDATE itens
     SET item_status = ?
     WHERE id_item = ?
-  `
+  `;
 
-  conexao.query(updateSql, ["INATIVO", id_item], (erro, resultado) => {
+  conexao.query(selectSql, [id_item], (erro, resultado) => {
     if (erro) {
-      console.log("Erro ao desativar item:", erro);
-      return res.status(500).send("Erro interno do servidor");
+      console.log("Erro ao consultar item:", erro);
+      return res.status(500).json({
+        erro: "Erro interno do servidor"
+      });
     }
 
-    if (resultado.affectedRows === 0) {
-      return res.status(404).send("Item não encontrado");
+    if (resultado.length === 0) {
+      return res.status(404).json({
+        erro: "Item não encontrado"
+      });
     }
 
-    return res.status(200).send("Item excluído com sucesso");
+    const situacao = resultado[0].situal_emprestimo;
+
+    if (situacao !== "DISPONIVEL") {
+      return res.status(400).json({
+        erro: "Não é possível excluir este item, pois ele está emprestado."
+      });
+    }
+
+    conexao.query(updateSql, ["INATIVO", id_item], (erro, resultadoUpdate) => {
+      if (erro) {
+        console.log("Erro ao desativar item:", erro);
+        return res.status(500).json({
+          erro: "Erro ao desativar item"
+        });
+      }
+
+      if (resultadoUpdate.affectedRows === 0) {
+        return res.status(404).json({
+          erro: "Item não encontrado"
+        });
+      }
+
+      return res.status(200).json({
+        mensagem: "Item excluído com sucesso"
+      });
+    });
   });
 };
 

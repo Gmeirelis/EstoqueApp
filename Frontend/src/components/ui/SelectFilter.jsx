@@ -8,6 +8,7 @@ export default function SelectDinamico({
   idKey,
   aoMudar,
   valor,
+  condicional,
   update
 }) {
   const [dados, setDados] = useState([]);
@@ -41,7 +42,7 @@ export default function SelectDinamico({
 
   return (
     <select
-      className="p-2 border border-gray-300 rounded-lg w-44 bg-white h-10 px-3 text-sm"
+      className={`p-2 border border-gray-300 rounded-lg w-44 bg-white h-10 px-3 text-sm ${condicional}`}
       onChange={(e) => aoMudar(e.target.value)}
       value={valor || ""}
     >

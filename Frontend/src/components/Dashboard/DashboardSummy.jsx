@@ -37,11 +37,7 @@ export default function Summary() {
         name="Total de Itens" 
         
       />
-       <Card 
-        icone={Wrench} 
-        numero={filtroManutencao.length} 
-        name="Total de Itens em manutençaõ" 
-      />
+       
 
         <Card 
         icone={Laptop} 

@@ -8,14 +8,16 @@ import Select from "../../utils/SelectName";
 import API_URL from "../../config/apis";
 import ProdutoVazio from "./ProdutoVazio";
 
-function TableProduct({ dados, ataulizarLista }) {
+function TableProduct({ dados, ataulizarLista,errorDelete }) {
 
 
   const [modal, setModal] = useState(false)
   const [idItem, setIdItem] = useState({
     id_item: null
   })
-  //const [mensagem,setMensagem] = useState(false)
+
+  const [mensagem,setMensagem] = useState("")
+
 
   const apagarItem = async (dados) => {
     try {
@@ -26,13 +28,18 @@ function TableProduct({ dados, ataulizarLista }) {
         },
         body: JSON.stringify(dados)
       });
+      
+      const resposta = await API.json();
 
-      const resposta = await API.text();
-      console.log(resposta)
+  if (!API.ok) {
+    throw new Error(resposta.erro);
+  }
 
-    } catch (erro) {
-      console.error("Erro ao excluir item:", erro);
-    }
+  setMensagem("Item excluído com sucesso");
+
+} catch (erro) {
+  setMensagem(erro.message);
+}
   };
 
 
@@ -78,10 +85,27 @@ function TableProduct({ dados, ataulizarLista }) {
               key={item.id_item}
               className="bg-white border border-slate-200 rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden"
             >
+
+               {mensagem && (
+  <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md">
+    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg flex items-center justify-between">
+      <p className="font-medium">{mensagem}</p>
+
+      <button
+        onClick={() => setMensagem("")}
+        className="font-bold ml-3"
+      >
+        ✕
+      </button>
+    </div>
+  </div>
+)}
+
+
               {/* CABEÇALHO */}
               <div className="px-5 py-4">
                 <div className="flex items-start justify-between">
-
+                
 
                   <div className="flex items-center gap-3">
 

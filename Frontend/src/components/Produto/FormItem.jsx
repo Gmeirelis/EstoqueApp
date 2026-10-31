@@ -15,7 +15,7 @@ export default function AdicionarItem({ atualizarLista }) {
   const [updateSelectCategory, setUpdateCategory] = useState(0);
   const [saved, setSaved] = useState(false);
   const [carregando, setCarregando] = useState(false)
-  const [error,setError] = useState({})
+  const [error, setError] = useState({})
 
 
   const enviandoRef = useRef(false);
@@ -24,14 +24,13 @@ export default function AdicionarItem({ atualizarLista }) {
 
   const openIsmodal = () => setIsModal(true);
   const closeIsmodal = () => setIsModal(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Impede múltiplos envios, inclusive cliques muito rápidos
+    // Impede envios duplicados
     if (enviandoRef.current) return;
 
-  const dadosParaSalvar = {
+    const dadosParaSalvar = {
       nome,
       marca,
       modelo,
@@ -39,36 +38,29 @@ export default function AdicionarItem({ atualizarLista }) {
       descricao,
     };
 
+    // Valida os dados com Zod
+    const resultado = productSchema.safeParse(dadosParaSalvar);
 
-  const resultado = productSchema.safeParse(dadosParaSalvar)
+    if (!resultado.success) {
+      const novosErros = {};
 
-if(!resultado.success){
+      resultado.error.issues.forEach((issue) => {
+        const campo = issue.path[0];
 
-const novosErros={};
+        if (campo && !novosErros[campo]) {
+          novosErros[campo] = issue.message;
+        }
+      });
 
-resultado.error.issues.forEach((issue)=>{
-  const campo = issue.path[0];
+      setError(novosErros);
+      return;
+    }
 
-
-if(campo && !novosErros[campo]){
-  novosErros[campo] = issue.message;
-}
-
-});
-
-setError(novosErros)
-return
-
-}
-
+    // Se passou na validação, inicia o envio
     enviandoRef.current = true;
     setCarregando(true);
-    setError({})
+    setError({});
     setSaved(false);
-
-  
-
-    
 
     try {
       const resposta = await fetch(`${API_URL}/itens/addProduct`, {
@@ -76,33 +68,41 @@ return
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(dadosParaSalvar),
+        body: JSON.stringify(resultado.data),
       });
 
       if (!resposta.ok) {
         throw new Error(`Erro HTTP: ${resposta.status}`);
       }
 
-      if (resposta.ok) {
-        setNome("");
-        setCategoria("");
-        setMarca("");
-        setModelo("");
-        setDescricao("");
-        setSaved(true);
-        atualizarLista();
+      setNome("");
+      setCategoria("");
+      setMarca("");
+      setModelo("");
+      setDescricao("");
 
-        setTimeout(() => {
-          setSaved(false);
-        }, 3000);
-      }
+      setSaved(true);
+      atualizarLista();
+
+      setTimeout(() => {
+        setSaved(false);
+      }, 3000);
+
     } catch (erro) {
       console.error("Erro ao cadastrar item:", erro);
       alert("Não foi possível cadastrar o item. Tente novamente.");
+
     } finally {
       enviandoRef.current = false;
       setCarregando(false);
     }
+  };
+
+  const limparErro = (campo) => {
+    setError((prev) => ({
+      ...prev,
+      [campo]: undefined,
+    }));
   };
 
   return (
@@ -116,7 +116,7 @@ return
 
 
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
 
         <ModaladdCategory
           isModal={isModal}
@@ -132,12 +132,30 @@ return
               type="text"
               placeholder="Digite o nome do item"
               value={nome} // Ligar ao estado
-              onChange={(e) => setNome(e.target.value)} // Atualizar estado
+              onChange={(e) => {
+                setNome(e.target.value);
+                limparErro("nome");
+              }}
               required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
+              className={`
+                w-full border 
+                border-gray-300 
+                rounded-lg 
+                px-4 
+                py-2 
+                focus:outline-none 
+                focus:ring-2 
+                focus:ring-blue-600 
+                focus:border-transparent 
+                transition
+                ${error.nome ?"border-red-700" : "border-gray-300"}
+              
+                `}
             />
-            {error.nome &&(
-              <p>{error.nome}</p>
+            {error.nome && (
+              <p className="text-red-500 text-sm mt-1">
+                {error.nome}
+              </p>
             )}
           </div>
 
@@ -149,10 +167,28 @@ return
               type="text"
               placeholder="Digite o nome do item"
               value={marca} // Ligar ao estado
-              onChange={(e) => setMarca(e.target.value)} // Atualizar estado
+              onChange={(e) => {setMarca(e.target.value);limparErro("marca")}} // Atualizar estado
               required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
+              className={`
+                w-full 
+                border 
+                border-gray-300 
+                rounded-lg 
+                px-4 
+                py-2 
+                focus:outline-none 
+                focus:ring-2 
+                focus:ring-blue-600 
+                focus:border-transparent 
+                transition
+                 ${error.marca ?"border-red-700" : "border-gray-300"}
+                `}
             />
+            {error.marca && (
+              <p className="text-red-500 text-sm mt-1">
+                {error.marca}
+              </p>
+            )}
           </div>
         </span>
 
@@ -165,22 +201,58 @@ return
               type="text"
               placeholder="Digite o nome do item"
               value={modelo} // Ligar ao estado
-              onChange={(e) => setModelo(e.target.value)} // Atualizar estado
+              onChange={(e) => {setModelo(e.target.value);limparErro("modelo")}} // Atualizar estado
               required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
+              className={`w-full border 
+              border-gray-300 
+              rounded-lg 
+              px-4 
+              py-2 
+              focus:outline-none 
+              focus:ring-2 
+              focus:ring-blue-600 
+              focus:border-transparent 
+              transition
+              ${error.modelo ? "border-red-700" : "border-gray-300"}
+              `}
+              
             />
+            {error.modelo && (
+              <p className="text-red-500 text-sm mt-1">
+                {error.modelo}
+              </p>
+            )}
           </div>
 
           <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-1">Descricao:</label>
+            <label className="text-gray-700 font-semibold mb-1">Descriçao:</label>
             <input
               type="text"
               placeholder="Digite o nome do item"
               value={descricao} // Ligar ao estado
-              onChange={(e) => setDescricao(e.target.value)} // Atualizar estado
+              onChange={(e) => {setDescricao(e.target.value); limparErro("descricao")}} // Atualizar estado
               required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
+              className={` w-full border 
+              border-gray-300 
+              rounded-lg 
+              px-4 
+              py-2 
+              focus:outline-none 
+              focus:ring-2 
+              focus:ring-blue-600 
+              focus:border-transparent 
+              transition
+              ${error.descricao ? "border-red-700" : "border-gray-300"}
+              `}
+             
+              
+              
             />
+            {error.descricao && (
+              <p className="text-red-500 text-sm mt-1">
+                {error.descricao}
+              </p>
+            )}
           </div>
         </span>
 
@@ -197,9 +269,15 @@ return
                 info="categoria_nome"
                 idKey="id_categoria"
                 update={updateCategory}
+                condicional={`${error.id_categoria ? "border-red-700" : "border-gray-300"}`}
                 valor={categoria}
-                aoMudar={(valorSelecionado) => setCategoria(valorSelecionado)}
+                aoMudar={(valorSelecionado) => {setCategoria(valorSelecionado); limparErro("id_categoria")}}
               />
+              {error.id_categoria && (
+                <p className="text-red-500 text-sm mt-1">
+                  {error.id_categoria}
+                </p>
+              )}
 
               <button
                 className="text-2xl"

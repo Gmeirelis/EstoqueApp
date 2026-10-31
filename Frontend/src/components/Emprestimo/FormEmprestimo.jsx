@@ -1,28 +1,48 @@
 import SelectDinamico from "../ui/SelectFilter";
 import { useState } from "react";
 import API_URL from "../../config/apis";
+import { emprestimoSchema } from "../../schema/emprestimoSchema";
 
-export default function AdicionarEmprestimo({ atualizaremprestimo,setIsModal }) {
+export default function AdicionarEmprestimo({ atualizaremprestimo, setIsModal }) {
   const [item, setItem] = useState("");
   const [funcionario, setFuncionario] = useState("");
   const [dataEmprestimo, setDataEmprestimo] = useState("");
   const [dataDevolucao, setDataDevolucao] = useState("");
   const [Observacao, setObservacao] = useState("");
-  
+  const [error, setErros] = useState({})
   // Adicionado para dar feedback visual na tela
   const [carregando, setCarregando] = useState(false);
 
-const handleSubmit = async (e) => {
-    e.preventDefault();
-    setCarregando(true); // Desabilita o botão ao iniciar a requisição
 
-    const dataSalve = {
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setErros({})
+
+    const payload = {
       id_item: item,
       id_funcionario: funcionario,
       data_emprestimo: dataEmprestimo,
       devolucao: dataDevolucao,
       observacao: Observacao,
     };
+
+    const result = emprestimoSchema.safeParse(payload);
+
+    if (!result.success) {
+      const novosErros = {};
+      result.error.issues.forEach((issue) => {
+        const campo = issue.path[0];
+        if (campo && !novosErros[campo]) {
+          novosErros[campo] = issue.message;
+        }
+      });
+      setErros(novosErros);
+      return;
+    }
+
+    setCarregando(true);
 
     try {
       const token = localStorage.getItem("token");
@@ -32,14 +52,14 @@ const handleSubmit = async (e) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(dataSalve),
+        body: JSON.stringify(payload),
       });
 
       const informacao = await resposta.json();
 
       if (resposta.ok) {
         atualizaremprestimo(informacao.dados);
-        
+
         // Limpa os campos após o envio bem-sucedido
         setItem("");
         setFuncionario("");
@@ -53,10 +73,11 @@ const handleSubmit = async (e) => {
     } catch (erro) {
       console.log("erro no fetch", erro);
     } finally {
-      setCarregando(false); // Reabilita o botão após a finalização (sucesso ou erro)
+      setCarregando(false);
+
     }
   };
-  
+
   return (
     <form className="w-full max-w-3xl rounded-2xl p-8 " onSubmit={handleSubmit}>
       {/* Cabeçalho */}
@@ -85,7 +106,11 @@ const handleSubmit = async (e) => {
             idKey="id_item"
             valor={item}
             aoMudar={(valor) => setItem(valor)}
+            condicional={error.id_item ? "border-red-600" : "border-gray-300"}
           />
+          <h1
+            className="text-red-600 text-sm"
+          >{error.id_item}</h1>
         </div>
 
         {/* Funcionário */}
@@ -100,11 +125,16 @@ const handleSubmit = async (e) => {
             info="funcionario_nome"
             idKey="id_funcionario"
             valor={funcionario}
+            condicional={error.id_funcionario ? "border-red-600" : "border-gray-300"}
             aoMudar={(valor) => setFuncionario(valor)}
           />
+          <h1
+            className="text-red-600 text-sm"
+          >{error.id_funcionario}</h1>
         </div>
 
         {/* Data empréstimo */}
+        
         <div className="flex flex-col">
           <label
             htmlFor="data_emprestimo"
@@ -119,7 +149,7 @@ const handleSubmit = async (e) => {
             name="data_emprestimo"
             value={dataEmprestimo}
             onChange={(e) => setDataEmprestimo(e.target.value)}
-            className="
+            className={`
           w-full
           h-11
           px-3
@@ -133,27 +163,31 @@ const handleSubmit = async (e) => {
           focus:bg-white
           focus:ring-2
           focus:ring-blue-100
-        "
+          ${error.data_emprestimo ? "border-red-600" : " border-gray-300"}
+          `}
           />
+          <h1
+            className="text-red-600 text-sm"
+          >{error.data_emprestimo}</h1>
         </div>
+      
 
-        {/* Data devolução */}
-        <div className="flex flex-col">
-          <label
-            htmlFor="data_devolucao"
-            className="text-sm font-semibold text-gray-700 mb-2"
-          >
-            Data prevista de devolução
-          </label>
+      {/* Data devolução */}
+      <div className="flex flex-col">
+        <label
+          htmlFor="data_devolucao"
+          className="text-sm font-semibold text-gray-700 mb-2"
+        >
+          Data prevista de devolução
+        </label>
 
-          <input
-            id="data_devolucao"
-            type="date"
-            name="data_devolucao"
-            value={dataDevolucao}
-            onChange={(e) => setDataDevolucao(e.target.value)}
-            className="
-          w-full
+        <input
+          id="data_devolucao"
+          type="date"
+          name="data_devolucao"
+          value={dataDevolucao}
+          onChange={(e) => setDataDevolucao(e.target.value)}
+          className={` w-full
           h-11
           px-3
           border
@@ -167,28 +201,34 @@ const handleSubmit = async (e) => {
           focus:border-blue-500
           focus:ring-2
           focus:ring-blue-100
-        "
-          />
-        </div>
+          ${error.devolucao ? "border-red-600" : " border-gray-300"}
+          `}
+        />
+        <h1
+            className="text-red-600 text-sm"
+          >{error.devolucao}</h1>
+        <div/>
       </div>
+      </div>
+    
 
-      {/* Observação */}
-      <div className="flex flex-col mt-6">
-        <label
-          htmlFor="observacao"
-          className="text-sm font-semibold text-gray-700 mb-2"
-        >
-          Observação
-        </label>
+      {/* Observação */ }
+  <div className="flex flex-col mt-6">
+    <label
+      htmlFor="observacao"
+      className="text-sm font-semibold text-gray-700 mb-2"
+    >
+      Observação
+    </label>
 
-        <textarea
-          id="observacao"
-          name="observacao"
-          value={Observacao}
-          onChange={(e) => setObservacao(e.target.value)}
-          placeholder="Digite uma observação sobre o empréstimo..."
-          rows="3"
-          className="
+    <textarea
+      id="observacao"
+      name="observacao"
+      value={Observacao}
+      onChange={(e) => setObservacao(e.target.value)}
+      placeholder="Digite uma observação sobre o empréstimo..."
+      rows="3"
+      className="
         w-full
         px-3
         py-3
@@ -205,15 +245,15 @@ const handleSubmit = async (e) => {
         focus:ring-2
         focus:ring-blue-100
       "
-        />
-      </div>
+    />
+  </div>
 
-      {/* Botões */}
-      <div className="flex flex-col-reverse sm:flex-row gap-3 mt-8">
-        <button
-          type="submit"
-          disabled={carregando}
-          className="
+  {/* Botões */ }
+  <div className="flex flex-col-reverse sm:flex-row gap-3 mt-8">
+    <button
+      type="submit"
+      disabled={carregando}
+      className="
          w-3xs
         sm:flex-1
         bg-blue-600
@@ -228,10 +268,10 @@ const handleSubmit = async (e) => {
         transition
         duration-200
       "
-        >
-       {carregando ? "Enviando..." : "Salvar empréstimo"}
-        </button>
-      </div>
-    </form>
+    >
+      {carregando ? "Enviando..." : "Salvar empréstimo"}
+    </button>
+  </div>
+    </form >
   );
 }

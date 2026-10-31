@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 function Product() {
   const [products, setProducts] = useState([]);
+  
 
   const token = localStorage.getItem("token");
 
