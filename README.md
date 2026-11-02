@@ -1,10 +1,55 @@
-import pypandoc
-
-markdown = r'''# 📦 EstoqueApp
+# 📦 EstoqueApp
 
 Sistema web de gerenciamento e controle de estoque, desenvolvido para facilitar a administração de produtos, funcionários, departamentos e empréstimos de equipamentos.
 
 O EstoqueApp permite acompanhar a movimentação dos itens, controlar entradas e saídas, gerenciar empréstimos e monitorar prazos de devolução por meio de um dashboard.
+
+---
+
+## 🖼️ Capturas de tela
+
+> **Como adicionar suas imagens:**
+> 1. Crie a pasta `docs/screenshots/` na raiz do projeto.
+> 2. Coloque os prints dentro dela (`.png` ou `.jpg`).
+> 3. Troque o nome do arquivo nos campos abaixo, se necessário.
+>
+> Enquanto a imagem não existir, o GitHub mostra o texto alternativo no lugar.
+
+### Dashboard
+![Dashboard](docs/screenshots/dashboard.png)
+
+### Gerenciamento de produtos
+![Produtos](docs/screenshots/produtos.png)
+
+### Funcionários e departamentos
+![Funcionários e departamentos](docs/screenshots/funcionarios.png)
+
+### Empréstimos
+![Empréstimos](docs/screenshots/emprestimos.png)
+
+### Histórico de movimentações
+![Histórico de movimentações](docs/screenshots/historico.png)
+
+### Tela de login
+![Login](docs/screenshots/login.png)
+
+<details>
+<summary>➕ Adicionar mais imagens (modelo)</summary>
+
+```md
+### Título da tela
+![Descrição da imagem](docs/screenshots/nome-do-arquivo.png)
+```
+
+Para controlar o tamanho da imagem, use HTML:
+
+```html
+<img src="docs/screenshots/nome-do-arquivo.png" alt="Descrição" width="700">
+```
+
+</details>
+
+---
 
 ## 🚀 Funcionalidades
 
@@ -35,18 +80,22 @@ O EstoqueApp permite acompanhar a movimentação dos itens, controlar entradas e
 - Histórico de entradas e saídas.
 - Monitoramento dos empréstimos e devoluções.
 
+---
+
 ## 🛠️ Tecnologias utilizadas
 
 O projeto foi desenvolvido utilizando uma arquitetura Full Stack, separando frontend, backend e banco de dados.
 
 | Tecnologia | Aplicação |
-|---|---|
-| React.js | Desenvolvimento da interface |
-| Node.js | Ambiente de execução do backend |
+|------------|-----------|
+| React.js   | Desenvolvimento da interface |
+| Node.js    | Ambiente de execução do backend |
 | Express.js | Construção da API REST |
-| MySQL | Banco de dados relacional |
-| Docker | Containerização e implantação |
-| Nginx | Reverse Proxy e direcionamento de requisições |
+| MySQL      | Banco de dados relacional |
+| Docker     | Containerização e implantação |
+| Nginx      | Reverse Proxy e direcionamento de requisições |
+
+---
 
 ## 🏗️ Arquitetura
 
@@ -74,20 +123,22 @@ A aplicação utiliza uma arquitetura composta por três camadas principais:
 O projeto utiliza Docker para executar os serviços em containers e Nginx como Reverse Proxy, centralizando o acesso ao frontend e à API.
 
 ```text
-                 USUÁRIO
-                    |
-                    v
-                  NGINX
-                    |
-             +------+------+
-             |             |
-             v             v
-          FRONTEND       BACKEND
-           React         Node.js
-                           |
-                           v
-                         MySQL
+              USUÁRIO
+                 |
+                 v
+               NGINX
+                 |
+          +------+------+
+          |             |
+          v             v
+      FRONTEND       BACKEND
+       React         Node.js
+                        |
+                        v
+                      MySQL
 ```
+
+---
 
 ## 📁 Estrutura do projeto
 
@@ -95,10 +146,10 @@ O projeto utiliza Docker para executar os serviços em containers e Nginx como R
 EstoqueApp/
 │
 ├── frontend/
-│
 ├── backend/
-│
 ├── nginx/
+├── docs/
+│   └── screenshots/
 │
 ├── docker-compose.yml
 ├── .env.example
@@ -106,6 +157,8 @@ EstoqueApp/
 ├── README.md
 └── INSTALL.md
 ```
+
+---
 
 ## ⚙️ Instalação
 
@@ -115,6 +168,8 @@ Para instalar e executar o EstoqueApp, consulte o manual de instalação:
 
 O manual apresenta os requisitos necessários, configuração das variáveis de ambiente, inicialização dos containers e criação do usuário administrador.
 
+---
+
 ## 🔐 Segurança
 
 - Autenticação de usuários.
@@ -123,11 +178,15 @@ O manual apresenta os requisitos necessários, configuração das variáveis de 
 - Gerenciamento de credenciais por variáveis de ambiente.
 - Separação dos serviços por containers Docker.
 
+---
+
 ## 🎯 Objetivo do projeto
 
 O EstoqueApp foi desenvolvido com o objetivo de oferecer uma solução para controle e gerenciamento de ativos e equipamentos, proporcionando maior organização dos recursos, rastreabilidade das movimentações e controle de responsabilidade sobre os itens emprestados.
 
 Além disso, o projeto busca aplicar conceitos de desenvolvimento Full Stack, APIs REST, banco de dados relacionais, containerização e implantação de aplicações web.
+
+---
 
 ## 👨‍💻 Desenvolvedor
 
@@ -135,11 +194,4 @@ Além disso, o projeto busca aplicar conceitos de desenvolvimento Full Stack, AP
 
 Desenvolvedor em formação, com interesse em desenvolvimento de software, Java, React.js, Node.js e infraestrutura de TI.
 
----
-
 Desenvolvido com dedicação para fins de aprendizado e aplicação prática de tecnologias Full Stack.
-'''
-
-output_path = "/mnt/data/README.md"
-pypandoc.convert_text(markdown, "md", format="md", outputfile=output_path, extra_args=["--standalone"])
-print(output_path)
