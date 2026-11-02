@@ -21,8 +21,11 @@ O EstoqueApp permite acompanhar a movimentação dos itens, controlar entradas e
 ### Gerenciamento de produtos
 ![Produtos](docs/screenshots/produtos.png)
 
-### Funcionários e departamentos
+### Funcionários 
 ![Funcionários e departamentos](docs/screenshots/funcionarios.png)
+
+### departamentos
+![Funcionários e departamentos](docs/screenshots/departamentos.png)
 
 ### Empréstimos
 ![Empréstimos](docs/screenshots/emprestimos.png)
