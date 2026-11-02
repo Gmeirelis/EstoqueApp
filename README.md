@@ -70,6 +70,7 @@ O projeto foi desenvolvido utilizando uma arquitetura Full Stack, separando fron
 | Tecnologia | Aplicação |
 |------------|-----------|
 | React.js   | Desenvolvimento da interface |
+| tailwind css| Estilização |
 | Node.js    | Ambiente de execução do backend |
 | Express.js | Construção da API REST |
 | MySQL      | Banco de dados relacional |
