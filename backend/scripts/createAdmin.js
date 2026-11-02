@@ -1,35 +1,43 @@
-
 const mysql = require('mysql2/promise');
 const bcrypt = require('bcrypt');
-require('dotenv').config();
 
 async function createAdmin() {
   let db;
 
+  
+
   try {
     const {
       DB_HOST,
+      DB_PORT,
       DB_USER,
       DB_PASSWORD,
       DB_NAME,
       ADMIN_EMAIL,
       ADMIN_PASSWORD
     } = process.env;
+    
+  console.log(ADMIN_EMAIL,ADMIN_PASSWORD)
 
+
+    // Validação das variáveis do banco.
+    if (!DB_HOST || !DB_USER || !DB_PASSWORD || !DB_NAME) {
+      throw new Error('Configure corretamente as variáveis de conexão com o banco.');
+    }
+
+    // Validação das credenciais do administrador.
     if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
-      throw new Error(
-        'Configure ADMIN_EMAIL e ADMIN_PASSWORD no arquivo .env.'
-      );
+      throw new Error('Configure ADMIN_EMAIL e ADMIN_PASSWORD.');
     }
 
     if (ADMIN_PASSWORD.length < 12) {
-      throw new Error(
-        'A senha inicial deve ter pelo menos 12 caracteres.'
-      );
+      throw new Error('A senha inicial deve ter pelo menos 12 caracteres.');
     }
 
+    // Conexão com o banco.
     db = await mysql.createConnection({
       host: DB_HOST,
+      port: Number(DB_PORT) || 3306,
       user: DB_USER,
       password: DB_PASSWORD,
       database: DB_NAME
@@ -37,30 +45,7 @@ async function createAdmin() {
 
     await db.beginTransaction();
 
-    // Localiza ou cria o departamento administrativo.
-    const [departamentos] = await db.execute(
-      `SELECT id_departamento
-       FROM departamentos
-       WHERE departamento_nome = ?
-       LIMIT 1`,
-      ['Administração']
-    );
-
-    let idDepartamento;
-
-    if (departamentos.length > 0) {
-      idDepartamento = departamentos[0].id_departamento;
-    } else {
-      const [novoDepartamento] = await db.execute(
-        `INSERT INTO departamentos (departamento_nome)
-         VALUES (?)`,
-        ['Administração']
-      );
-
-      idDepartamento = novoDepartamento.insertId;
-    }
-
-    // Não cria uma conta duplicada.
+    // Verifica se o administrador já existe.
     const [usuarios] = await db.execute(
       `SELECT id_usuario, administrador
        FROM usuarios
@@ -77,18 +62,21 @@ async function createAdmin() {
       }
 
       await db.commit();
+
       console.log('O administrador já existe. Nenhuma alteração realizada.');
       return;
     }
 
+    // Gera o hash da senha.
     const senhaHash = await bcrypt.hash(ADMIN_PASSWORD, 12);
 
+    // Cria o administrador.
     await db.execute(
       `INSERT INTO usuarios
        (id_departamento, nome, sobrenome, email, senha, administrador)
        VALUES (?, ?, ?, ?, ?, ?)`,
       [
-        idDepartamento,
+        8,
         'Administrador',
         'Sistema',
         ADMIN_EMAIL,
@@ -102,6 +90,7 @@ async function createAdmin() {
     console.log('Administrador inicial criado com sucesso.');
     console.log(`E-mail: ${ADMIN_EMAIL}`);
     console.log('A senha não será exibida no terminal.');
+
   } catch (error) {
     if (db) {
       await db.rollback().catch(() => {});
@@ -109,6 +98,7 @@ async function createAdmin() {
 
     console.error('Falha na inicialização:', error.message);
     process.exitCode = 1;
+
   } finally {
     if (db) {
       await db.end();

@@ -1,21 +1,30 @@
 const mysql = require('mysql2');
-require('dotenv').config();
+const path = require('path');
 
-const conexao = mysql.createConnection({
-  host: process.env.DB_HOST || 'db', // Se DB_HOST não existir no .env, usa 'db' (nome do serviço Docker)
-  user: process.env.DB_USER || 'estoque_user',
-  password: process.env.DB_PASSWORD || 'estoque_password',
-  database: process.env.DB_NAME || 'estoque_db',
-  port: process.env.DB_PORT || 3306
+
+const envPath = path.resolve(__dirname, '../../../.env');
+
+require('dotenv').config({
+  path: envPath
 });
 
-// Teste de conexão (Opcional, mas muito útil para ver logs no Docker)
+
+
+const conexao = mysql.createConnection({
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: Number(process.env.DB_PORT) || 3306
+});
+
 conexao.connect((err) => {
   if (err) {
-    console.error('❌ Erro ao conectar no MySQL:', err.message);
-  } else {
-    console.log('✅ Conectado ao banco de dados MySQL com sucesso!');
+    console.error('Erro ao conectar no MySQL:', err.message);
+    return;
   }
+
+  console.log('Conectado ao banco de dados MySQL com sucesso!');
 });
 
 module.exports = conexao;

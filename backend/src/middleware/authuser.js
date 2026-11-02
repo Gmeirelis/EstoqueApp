@@ -1,5 +1,7 @@
+
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
+
+// Resolve o caminho para o arquivo .env
 
 const autenticar = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -22,7 +24,7 @@ const autenticar = (req, res, next) => {
   const token = parts[1];
 
   try {
-    // 3. (Opcional) Validação de segurança para garantir que o secret existe
+    // 3. Validação para garantir que o secret existe
     if (!process.env.JWT_SECRET) {
       console.error("ERRO CRÍTICO: JWT_SECRET não definido nas variáveis de ambiente.");
       return res.status(500).json({ mensagem: "Erro interno do servidor" });
@@ -32,20 +34,16 @@ const autenticar = (req, res, next) => {
     const usuario = jwt.verify(token, process.env.JWT_SECRET);
 
     // Salva os dados do usuário na requisição
-    
-
-console.log("PAYLOAD DO TOKEN:", usuario);
-
-req.usuario = usuario;
+    console.log("PAYLOAD DO TOKEN:", usuario);
+    req.usuario = usuario;
 
     // Passa para o próximo middleware ou rota
     return next();
   } catch (error) {
-    // Registra o erro apenas se não for um erro comum de JWT expirado/inválido
-    if (error.name !== 'TokenExpiredError' && error.name !== 'JsonWebTokenError') {
-       console.error("Erro na autenticação:", error);
+    if (error.name !== "TokenExpiredError" && error.name !== "JsonWebTokenError") {
+      console.error("Erro na autenticação:", error);
     }
-    
+
     return res.status(401).json({
       mensagem: "Token inválido ou expirado",
     });
