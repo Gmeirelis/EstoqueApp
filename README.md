@@ -8,13 +8,6 @@ O EstoqueApp permite acompanhar a movimentação dos itens, controlar entradas e
 
 ## 🖼️ Capturas de tela
 
-> **Como adicionar suas imagens:**
-> 1. Crie a pasta `docs/screenshots/` na raiz do projeto.
-> 2. Coloque os prints dentro dela (`.png` ou `.jpg`).
-> 3. Troque o nome do arquivo nos campos abaixo, se necessário.
->
-> Enquanto a imagem não existir, o GitHub mostra o texto alternativo no lugar.
-
 ### Dashboard
 ![Dashboard](docs/screenshots/dashboard.png)
 
@@ -36,21 +29,6 @@ O EstoqueApp permite acompanhar a movimentação dos itens, controlar entradas e
 ### Tela de login
 ![Login](docs/screenshots/login.png)
 
-<details>
-<summary>➕ Adicionar mais imagens (modelo)</summary>
-
-```md
-### Título da tela
-![Descrição da imagem](docs/screenshots/nome-do-arquivo.png)
-```
-
-Para controlar o tamanho da imagem, use HTML:
-
-```html
-<img src="docs/screenshots/nome-do-arquivo.png" alt="Descrição" width="700">
-```
-
-</details>
 
 ---
 
