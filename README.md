@@ -1,99 +1,142 @@
-#  EstoqueApp
+<div align="center">
 
+# 📦 EstoqueApp
 
-## Descrição 
+**Sistema web para controle de estoque, empréstimos e patrimônio de equipamentos.**
 
-Sistema web de gerenciamento e controle de estoque, desenvolvido para facilitar a administração de produtos, funcionários, departamentos e empréstimos de equipamentos.
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Nginx](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
 
-O EstoqueApp permite acompanhar a movimentação dos itens, controlar entradas e saídas, gerenciar empréstimos e monitorar prazos de devolução por meio de um dashboard.
+</div>
 
+---
 
-## Funcionalidades
+## 📖 Sobre o projeto
 
-###  Gerenciamento de Estoque
-- Cadastro, edição e remoção de produtos.
-- Organização de produtos por categorias.
-- Controle de disponibilidade e status dos itens.
-- Registro e consulta do histórico de movimentações do estoque.
-- Monitoramento da situação dos produtos.
+O **EstoqueApp** nasceu para resolver um problema comum em equipes de TI: saber **o que existe em estoque, quem está com cada equipamento e quando ele deve voltar**.
 
-###  Gerenciamento de Funcionários e Departamentos
-- Cadastro, edição e gerenciamento de funcionários.
-- Associação de funcionários aos seus respectivos departamentos.
-- Organização e consulta dos equipamentos por departamento.
-- Identificação dos responsáveis pelos empréstimos de produtos.
+A aplicação centraliza o cadastro de produtos, funcionários e departamentos, registra entradas, saídas e empréstimos, e entrega tudo em um dashboard com indicadores e alertas de devolução.
 
-###  Controle de Empréstimos
-- Registro de empréstimos de produtos para funcionários.
-- Controle das datas de retirada e previsão de devolução.
-- Gerenciamento do status dos empréstimos.
-- Registro e acompanhamento da devolução dos produtos.
-- Identificação de empréstimos próximos do vencimento ou em atraso.
+### Problemas que resolve
 
-###  Dashboard
-- Visão geral da situação atual do estoque.
-- Indicadores de produtos organizados por categoria.
-- Acompanhamento das movimentações de estoque.
-- Histórico de entradas e saídas de produtos.
-- Monitoramento de empréstimos, devoluções e itens pendentes.
-- Visualização de indicadores para facilitar o acompanhamento e a gestão do patrimônio.
+- Equipamentos emprestados sem registro de responsável.
+- Falta de histórico de entradas e saídas.
+- Dificuldade em identificar empréstimos em atraso.
+- Controle de patrimônio feito em planilhas dispersas.
 
-## 🛠️ Tecnologias utilizadas
+---
 
-O projeto foi desenvolvido utilizando uma arquitetura Full Stack, separando frontend, backend e banco de dados.
+## 📸 Capturas de tela
 
-| Tecnologia | Aplicação |
-|------------|-----------|
-| React.js   | Desenvolvimento da interface |
-| tailwind css| Estilização |
-| Node.js    | Ambiente de execução do backend |
-| Express.js | Construção da API REST |
-| MySQL      | Banco de dados relacional |
-| Docker     | Containerização e implantação |
-| Nginx      | Reverse Proxy e direcionamento de requisições |
+> Substitua os caminhos abaixo pelas imagens reais em `docs/screenshots/`.
+
+| Dashboard | Produtos |
+|:---------:|:--------:|
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Produtos](docs/screenshots/produtos.png) |
+
+| Empréstimos | Movimentações |
+|:-----------:|:-------------:|
+| ![Empréstimos](docs/screenshots/emprestimos.png) | ![Movimentações](docs/screenshots/movimentacoes.png) |
+
+---
+
+## ✨ Funcionalidades
+
+### 📦 Estoque
+- [x] Cadastro, edição e remoção de produtos
+- [x] Organização por categorias
+- [x] Controle de disponibilidade e status
+- [x] Histórico de movimentações (entradas e saídas)
+
+### 👥 Funcionários e departamentos
+- [x] Cadastro e gerenciamento de funcionários
+- [x] Vínculo com departamentos
+- [x] Consulta de equipamentos por departamento
+- [x] Identificação do responsável por cada empréstimo
+
+### 🔄 Empréstimos
+- [x] Registro de empréstimos para funcionários
+- [x] Datas de retirada e previsão de devolução
+- [x] Registro de devolução
+- [x] Destaque para empréstimos próximos do vencimento ou em atraso
+
+### 📊 Dashboard
+- [x] Visão geral do estoque
+- [x] Indicadores por categoria
+- [x] Histórico de entradas e saídas
+- [x] Resumo de empréstimos, devoluções e pendências
+
+---
+
+## 🛠️ Tecnologias
+
+| Camada | Tecnologia | Uso |
+|--------|-----------|-----|
+| Frontend | React.js | Interface do usuário |
+| Frontend | Tailwind CSS | Estilização |
+| Backend | Node.js + Express.js | API REST e regras de negócio |
+| Banco de dados | MySQL | Armazenamento relacional |
+| Infraestrutura | Docker | Containerização dos serviços |
+| Infraestrutura | Nginx | Reverse proxy |
 
 ---
 
 ## 🏗️ Arquitetura
 
-A aplicação utiliza uma arquitetura composta por três camadas principais:
-
-**Frontend — React.js**
-- Interface de interação com o usuário.
-- Consumo da API REST.
-- Visualização de informações e indicadores do estoque.
-
-**Backend — Node.js**
-- Regras de negócio.
-- Validação e processamento das requisições.
-- Gerenciamento de funcionários, departamentos, produtos e empréstimos.
-- Comunicação com o banco de dados.
-
-**Banco de dados — MySQL**
-- Armazenamento de produtos.
-- Cadastro de funcionários e departamentos.
-- Registro de empréstimos e devoluções.
-- Histórico de movimentações.
-
-### Infraestrutura
-
-O projeto utiliza Docker para executar os serviços em containers e Nginx como Reverse Proxy, centralizando o acesso ao frontend e à API.
-
 ```text
-              USUÁRIO
-                 |
-                 v
-               NGINX
-                 |
-          +------+------+
-          |             |
-          v             v
-      FRONTEND       BACKEND
-       React         Node.js
-                        |
-                        v
-                      MySQL
+            USUÁRIO
+               │
+               ▼
+             NGINX  (reverse proxy)
+               │
+        ┌──────┴──────┐
+        ▼             ▼
+    FRONTEND       BACKEND
+     React        Node + Express
+                      │
+                      ▼
+                    MySQL
 ```
+
+- **Frontend:** consome a API REST e exibe dados e indicadores.
+- **Backend:** valida requisições, aplica regras de negócio e acessa o banco.
+- **Banco de dados:** guarda produtos, funcionários, departamentos, empréstimos e histórico.
+- **Nginx + Docker:** todos os serviços sobem em containers, com um único ponto de entrada.
+
+---
+
+## 🚀 Como executar
+
+**Pré-requisitos:** [Docker](https://docs.docker.com/get-docker/) e Docker Compose.
+
+```bash
+# 1. Clone o repositório
+git clone https://github.com/<seu-usuario>/EstoqueApp.git
+cd EstoqueApp
+
+# 2. Configure as variáveis de ambiente
+cp .env.example .env
+
+# 3. Suba os containers
+docker compose up -d --build
+```
+
+Depois, crie o usuário administrador e finalize a configuração seguindo o
+📖 **[Manual de Instalação (INSTALL.md)](INSTALL.md)**.
+
+---
+
+## 🔐 Segurança
+
+- Autenticação com **JWT**
+- Validação de dados no frontend e no backend
+- Credenciais gerenciadas por variáveis de ambiente (nunca versionadas)
+- Serviços isolados em containers Docker
 
 ---
 
@@ -101,54 +144,43 @@ O projeto utiliza Docker para executar os serviços em containers e Nginx como R
 
 ```text
 EstoqueApp/
-│
-├── frontend/
-├── backend/
-├── nginx/
+├── frontend/            # Aplicação React
+├── backend/             # API Node.js + Express
+├── nginx/               # Configuração do reverse proxy
 ├── docs/
-│   └── screenshots/
-│
+│   └── screenshots/     # Imagens usadas neste README
 ├── docker-compose.yml
 ├── .env.example
-├── .gitignore
-├── README.md
-└── INSTALL.md
+├── INSTALL.md
+└── README.md
 ```
 
 ---
 
-## ⚙️ Instalação
+## 🗺️ Próximos passos
 
-Para instalar e executar o EstoqueApp, consulte o manual de instalação:
+- [ ] Relatórios exportáveis (PDF/Excel)
+- [ ] Notificações de devolução por e-mail
+- [ ] Leitura de código de barras / QR Code
+- [ ] Perfis de acesso com permissões diferentes
+- [ ] Testes automatizados
 
-📖 [Manual de Instalação — INSTALL.md](INSTALL.md)
-
-O manual apresenta os requisitos necessários, configuração das variáveis de ambiente, inicialização dos containers e criação do usuário administrador.
-
----
-
-## 🔐 Segurança
-
-- Autenticação de usuários.
-- Utilização de JWT para autenticação.
-- Validação de dados no frontend e backend.
-- Gerenciamento de credenciais por variáveis de ambiente.
-- Separação dos serviços por containers Docker.
+> Ajuste esta lista para refletir o que você realmente pretende fazer.
 
 ---
 
-## 🎯 Objetivo do projeto
+## 🎯 Objetivo
 
-O EstoqueApp foi desenvolvido com o objetivo de oferecer uma solução para controle e gerenciamento de ativos e equipamentos, proporcionando maior organização dos recursos, rastreabilidade das movimentações e controle de responsabilidade sobre os itens emprestados.
+Oferecer uma solução prática para controle de ativos e equipamentos, com **rastreabilidade das movimentações** e **responsabilidade clara** sobre cada item emprestado.
 
-Além disso, o projeto busca aplicar conceitos de desenvolvimento Full Stack, APIs REST, banco de dados relacionais, containerização e implantação de aplicações web.
+O projeto também é uma aplicação prática de desenvolvimento Full Stack, APIs REST, bancos relacionais, containerização e deploy de aplicações web.
 
 ---
 
-## 👨‍💻 Desenvolvedor
+## 👨‍💻 Autor
 
 **Guilherme Meireles Lima**
+Desenvolvedor com interesse em React, Node.js, Java e infraestrutura de TI.
 
-Desenvolvedor em formação, com interesse em desenvolvimento de software, Java, React.js, Node.js e infraestrutura de TI.
-
-Desenvolvido com dedicação para fins de aprendizado e aplicação prática de tecnologias Full Stack.
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://linkedin.com/in/<seu-perfil>)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)](https://github.com/<seu-usuario>)
