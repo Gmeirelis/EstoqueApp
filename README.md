@@ -1,12 +1,5 @@
 #  EstoqueApp
 
-## Sumary
- - descrição
- - Tecnologias
- - Funcionalidade
- - imagens
- - como instalar
- - Licença
 
 ## Descrição 
 
