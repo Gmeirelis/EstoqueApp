@@ -18,29 +18,29 @@ O EstoqueApp permite acompanhar a movimentação dos itens, controlar entradas e
 
 ---
 
-### 🚀 Funcionalidades
+###  Funcionalidades
 
-### 📦 Gerenciamento de estoque
+##  Gerenciamento de estoque
 - Cadastro de produtos.
 - Edição e remoção de produtos.
 - Organização dos itens por categorias.
 - Controle de disponibilidade e situação dos produtos.
 - Histórico de movimentações de estoque.
 
-### 👥 Gerenciamento de funcionários e departamentos
+##  Gerenciamento de funcionários e departamentos
 - Cadastro e gerenciamento de funcionários.
 - Associação de funcionários aos respectivos departamentos.
 - Organização dos equipamentos por departamento.
 - Consulta dos responsáveis pelos empréstimos.
 
-### 🔄 Controle de empréstimos
+##  Controle de empréstimos
 - Empréstimo de produtos para funcionários.
 - Registro de data de retirada e previsão de devolução.
 - Controle do status dos empréstimos.
 - Registro de devolução dos produtos.
 - Avisos de empréstimos com prazo de devolução próximo ou atrasado.
 
-### 📊 Dashboard
+###  Dashboard
 - Visão geral do estoque.
 - Indicadores de produtos por categoria.
 - Acompanhamento das movimentações.
