@@ -15,39 +15,35 @@ Sistema web de gerenciamento e controle de estoque, desenvolvido para facilitar 
 O EstoqueApp permite acompanhar a movimentação dos itens, controlar entradas e saídas, gerenciar empréstimos e monitorar prazos de devolução por meio de um dashboard.
 
 
+## Funcionalidades
 
----
+###  Gerenciamento de Estoque
+- Cadastro, edição e remoção de produtos.
+- Organização de produtos por categorias.
+- Controle de disponibilidade e status dos itens.
+- Registro e consulta do histórico de movimentações do estoque.
+- Monitoramento da situação dos produtos.
 
-##  Funcionalidades
+###  Gerenciamento de Funcionários e Departamentos
+- Cadastro, edição e gerenciamento de funcionários.
+- Associação de funcionários aos seus respectivos departamentos.
+- Organização e consulta dos equipamentos por departamento.
+- Identificação dos responsáveis pelos empréstimos de produtos.
 
-#  Gerenciamento de estoque
-- Cadastro de produtos.
-- Edição e remoção de produtos.
-- Organização dos itens por categorias.
-- Controle de disponibilidade e situação dos produtos.
-- Histórico de movimentações de estoque.
+###  Controle de Empréstimos
+- Registro de empréstimos de produtos para funcionários.
+- Controle das datas de retirada e previsão de devolução.
+- Gerenciamento do status dos empréstimos.
+- Registro e acompanhamento da devolução dos produtos.
+- Identificação de empréstimos próximos do vencimento ou em atraso.
 
-#  Gerenciamento de funcionários e departamentos
-- Cadastro e gerenciamento de funcionários.
-- Associação de funcionários aos respectivos departamentos.
-- Organização dos equipamentos por departamento.
-- Consulta dos responsáveis pelos empréstimos.
-
-#  Controle de empréstimos
-- Empréstimo de produtos para funcionários.
-- Registro de data de retirada e previsão de devolução.
-- Controle do status dos empréstimos.
-- Registro de devolução dos produtos.
-- Avisos de empréstimos com prazo de devolução próximo ou atrasado.
-
-##  Dashboard
-- Visão geral do estoque.
-- Indicadores de produtos por categoria.
-- Acompanhamento das movimentações.
-- Histórico de entradas e saídas.
-- Monitoramento dos empréstimos e devoluções.
-
----
+###  Dashboard
+- Visão geral da situação atual do estoque.
+- Indicadores de produtos organizados por categoria.
+- Acompanhamento das movimentações de estoque.
+- Histórico de entradas e saídas de produtos.
+- Monitoramento de empréstimos, devoluções e itens pendentes.
+- Visualização de indicadores para facilitar o acompanhamento e a gestão do patrimônio.
 
 ## 🛠️ Tecnologias utilizadas
 
