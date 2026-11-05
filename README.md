@@ -1,33 +1,12 @@
 # 📦 EstoqueApp
 
+## Descrição 
+
 Sistema web de gerenciamento e controle de estoque, desenvolvido para facilitar a administração de produtos, funcionários, departamentos e empréstimos de equipamentos.
 
 O EstoqueApp permite acompanhar a movimentação dos itens, controlar entradas e saídas, gerenciar empréstimos e monitorar prazos de devolução por meio de um dashboard.
 
----
 
-## 🖼️ Capturas de tela
-
-### Dashboard
-![Dashboard](docs/screenshots/dashboard.png)
-
-### Gerenciamento de produtos
-![Produtos](docs/screenshots/produtos.png)
-
-### Funcionários 
-![Funcionários e departamentos](docs/screenshots/funcionarios.png)
-
-### departamentos
-![Funcionários e departamentos](docs/screenshots/departamentos.png)
-
-### Empréstimos
-![Empréstimos](docs/screenshots/emprestimos.png)
-
-### Histórico de movimentações
-![Histórico de movimentações](docs/screenshots/historico.png)
-
-### Tela de login
-![Login](docs/screenshots/login.png)
 
 
 ---
