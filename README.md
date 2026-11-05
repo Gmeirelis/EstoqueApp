@@ -16,7 +16,6 @@ O EstoqueApp permite acompanhar a movimentação dos itens, controlar entradas e
 
 
 
-
 ---
 
 ## 🚀 Funcionalidades
