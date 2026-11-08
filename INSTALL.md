@@ -7,7 +7,7 @@
 
 ## 1. Baixar o projeto
 ```bash
-git clone [<URL_DO_REPOSITORIO>](https://github.com/Gmeirelis/EstoqueApp.git) estoqueapp
+git clone https://github.com/Gmeirelis/EstoqueApp.git 
 cd estoqueapp
 ```
 
