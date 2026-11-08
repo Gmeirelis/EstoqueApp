@@ -24,7 +24,7 @@ Preencha todos os valores `CHANGE_ME`:
 | `DB_ROOT_PASSWORD` | Senha do root do MySQL |
 | `DB_USER` / `DB_PASSWORD` | Usuário e senha da aplicação no banco |
 | `DB_NAME` | Nome do banco (padrão: `estoque_app`) |
-| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Login do administrador inicial |
+| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Login do administrador inicial(Password > 12 caracteres) |
 | `JWT_SECRET` | Segredo para assinar os tokens de login |
 
 Para gerar um `JWT_SECRET` seguro:
