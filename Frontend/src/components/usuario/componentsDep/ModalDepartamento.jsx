@@ -45,7 +45,6 @@ export default function ModalDep({ id, dados, updateDados }) {
       }
       const data = await resposta.json();
       updateDados();
-      console.log(data);
     } catch (error) {
       console.log("verifique se o seu recurso esta correto", error);
     }

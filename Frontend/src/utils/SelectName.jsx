@@ -12,7 +12,6 @@ export default function Select({
   const [dados, setDados] = useState([]);
 
   
-  console.log("meus:",dados);
 
   useEffect(() => {
     async function buscar() {

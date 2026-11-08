@@ -87,7 +87,6 @@ const postEmprestimo = (req, res) => {
 
       const idEmprestimo = resultado.insertId;
 
-      console.log("ID do empréstimo criado:", idEmprestimo);
 
       atualizarItem(idEmprestimo);
     });

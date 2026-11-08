@@ -18,7 +18,7 @@ export default function Tabela({
   });
   const [isModal, setIsmodal] = useState(false);
 
-  console.log(devolucao);
+  
 
   const delvoverItem = async (dadosDevolucao) => {
     const API = await fetch(`${API_URL}/devolutionItem`, {
@@ -30,8 +30,6 @@ export default function Tabela({
     });
 
     const resposta = await API.json();
-
-    console.log(resposta)
     if (resposta) {
       atualizarDevolucao()
     }

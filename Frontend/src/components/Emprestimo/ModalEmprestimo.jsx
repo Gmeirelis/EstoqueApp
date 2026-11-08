@@ -9,7 +9,7 @@ const[id,setid] = useState({
     id_emprestimo:null,
     id_item:null
 })
-console.log(id)
+
 
 function controlaModal(boleano){
     setIsmodal(boleano)

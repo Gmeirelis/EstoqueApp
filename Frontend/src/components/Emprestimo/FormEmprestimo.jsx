@@ -134,7 +134,7 @@ export default function AdicionarEmprestimo({ atualizaremprestimo, setIsModal })
         </div>
 
         {/* Data empréstimo */}
-        
+
         <div className="flex flex-col">
           <label
             htmlFor="data_emprestimo"
@@ -170,26 +170,26 @@ export default function AdicionarEmprestimo({ atualizaremprestimo, setIsModal })
             className="text-red-600 text-sm"
           >{error.data_emprestimo}</h1>
         </div>
-      
 
-      {/* Data devolução */}
-      <div className="flex flex-col">
-        <label
-          htmlFor="data_devolucao"
-          className="text-sm font-semibold text-gray-700 mb-2"
-        >
-          Data prevista de devolução
-        </label>
 
-        <input
-          id="data_devolucao"
-          type="date"
-          name="data_devolucao"
-          value={dataDevolucao}
-          onChange={(e) => setDataDevolucao(e.target.value)}
-          className={` w-full
+        {/* Data devolução */}
+        <div className="flex flex-col">
+          <label
+            htmlFor="data_devolucao"
+            className="text-sm font-semibold text-gray-700 mb-2"
+          >
+            Data prevista de devolução
+          </label>
+
+          <input
+            id="data_devolucao"
+            type="date"
+            name="data_devolucao"
+            value={dataDevolucao}
+            onChange={(e) => setDataDevolucao(e.target.value)}
+            className={` w-full
           h-11
-          px-3
+          px-3className
           border
           border-gray-300
           rounded-lg
@@ -203,32 +203,32 @@ export default function AdicionarEmprestimo({ atualizaremprestimo, setIsModal })
           focus:ring-blue-100
           ${error.devolucao ? "border-red-600" : " border-gray-300"}
           `}
-        />
-        <h1
+          />
+          <h1
             className="text-red-600 text-sm"
           >{error.devolucao}</h1>
-        <div/>
+          <div />
+        </div>
       </div>
-      </div>
-    
 
-      {/* Observação */ }
-  <div className="flex flex-col mt-6">
-    <label
-      htmlFor="observacao"
-      className="text-sm font-semibold text-gray-700 mb-2"
-    >
-      Observação
-    </label>
 
-    <textarea
-      id="observacao"
-      name="observacao"
-      value={Observacao}
-      onChange={(e) => setObservacao(e.target.value)}
-      placeholder="Digite uma observação sobre o empréstimo..."
-      rows="3"
-      className="
+      {/* Observação */}
+      <div className="flex flex-col mt-6">
+        <label
+          htmlFor="observacao"
+          className="text-sm font-semibold text-gray-700 mb-2"
+        >
+          Observação
+        </label>
+
+        <textarea
+          id="observacao"
+          name="observacao"
+          value={Observacao}
+          onChange={(e) => setObservacao(e.target.value)}
+          placeholder="Digite uma observação sobre o empréstimo..."
+          rows="3"
+          className="
         w-full
         px-3
         py-3
@@ -245,15 +245,15 @@ export default function AdicionarEmprestimo({ atualizaremprestimo, setIsModal })
         focus:ring-2
         focus:ring-blue-100
       "
-    />
-  </div>
+        />
+      </div>
 
-  {/* Botões */ }
-  <div className="flex flex-col-reverse sm:flex-row gap-3 mt-8">
-    <button
-      type="submit"
-      disabled={carregando}
-      className="
+      {/* Botões */}
+      <div className="flex flex-col-reverse sm:flex-row gap-3 mt-8">
+        <button
+          type="submit"
+          disabled={carregando}
+          className="
          w-3xs
         sm:flex-1
         bg-blue-600
@@ -268,10 +268,10 @@ export default function AdicionarEmprestimo({ atualizaremprestimo, setIsModal })
         transition
         duration-200
       "
-    >
-      {carregando ? "Enviando..." : "Salvar empréstimo"}
-    </button>
-  </div>
+        >
+          {carregando ? "Enviando..." : "Salvar empréstimo"}
+        </button>
+      </div>
     </form >
   );
 }

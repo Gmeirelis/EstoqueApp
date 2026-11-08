@@ -9,7 +9,7 @@ export default function FiltroEmprestimo({
   filtroColaborador,
   setFiltroColaborador
 }) {
-console.log('teste', filtroColaborador)
+
   return (
     <div className="flex gap-4">
 

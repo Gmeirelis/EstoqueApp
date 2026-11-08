@@ -7,7 +7,7 @@ import API_URL from "../../config/apis";
 
 export default function Summary() {
   const [resumo, setResumo] = useState([]);
-  console.log(resumo)
+ 
 //const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -26,8 +26,7 @@ export default function Summary() {
   const filtroEmuso = dadosfiltrados.filter(item =>item.situal_emprestimo === "DISPONIVEL")
   const filtroEmprestado = dadosfiltrados.filter(item =>item.situal_emprestimo === "INDISPONIVEL")
   //const filtroDisponivel = dadosfiltrados.filter(item => item.situal_emprestimo === "DISPONIVEL")
-  console.log(resumo)
-  console.log(filtroManutencao)
+  
 
   return (
     <div className="flex gap-24 justify-center">

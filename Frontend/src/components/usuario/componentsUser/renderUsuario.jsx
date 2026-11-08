@@ -114,7 +114,7 @@ function ModalAddUser({ isModal, setIsmodal, atualizar }) {
     };
 
 
-    console.log(nome.length)
+   
     try {
       const resposta = await fetch(`${API_URL}/funcionarios`, {
         method: "POST",
@@ -139,7 +139,7 @@ function ModalAddUser({ isModal, setIsmodal, atualizar }) {
       atualizar();
       setIsmodal(false);
 
-      console.log(data);
+      
     } catch (error) {
       console.error(error);
     } finally {

@@ -16,7 +16,6 @@ export default function Devolution() {
   const [carregando, setCarregando] = useState(true);
   const [isModal,setIsModal] = useState(false)
 
-  console.log(filtroColaborador, filtroDepartamento)
 
   const buscarDados = async () => {
     try {

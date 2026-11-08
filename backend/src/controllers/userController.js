@@ -196,7 +196,7 @@ WHERE id_usuario = ?;
       return res.status(500).json({ mensagem: "erro no servidor" });
     }
 
-    console.log("usuario deletado");
+  
     res.status(200).json({ mensagem: "usuario deletado com sucesso" });
   });
 };

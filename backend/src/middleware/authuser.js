@@ -34,7 +34,7 @@ const autenticar = (req, res, next) => {
     const usuario = jwt.verify(token, process.env.JWT_SECRET);
 
     // Salva os dados do usuário na requisição
-    console.log("PAYLOAD DO TOKEN:", usuario);
+   
     req.usuario = usuario;
 
     // Passa para o próximo middleware ou rota

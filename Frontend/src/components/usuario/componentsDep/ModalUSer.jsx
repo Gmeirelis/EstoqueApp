@@ -6,7 +6,7 @@ import API_URL from "../../../config/apis";
  export default function ModalUserDep({ idDep }) {
   const [dados, setDados] = useState([]);
 
-  console.log(dados);
+
 
   const getDepUser = async () => {
     const resposta = await fetch(`${API_URL}/department/${idDep}`);

@@ -54,7 +54,7 @@ function SelectUser({ idDep, dadosAntigo }) {
 }
 
 function ModalDelete({ ismodal, setISmodal, id, uptadeFunction }) {
-  console.log("meu id", id);
+  
 
   async function deleteFuncionario(id_funcionario) {
     try {
@@ -115,7 +115,7 @@ export default function ModalUsuario({
   const [idSelectDelete, setIdSelectDelete] = useState("");
   const [isModal, setIsModal] = useState(false);
 
-  console.log(idSelectDelete, isModal);
+ 
 
   function initDelete(valor) {
     setIsModal(true);
