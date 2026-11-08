@@ -10,12 +10,43 @@
 git clone https://github.com/Gmeirelis/EstoqueApp.git 
 cd estoqueapp
 ```
-
 ## 2. Configurar o ambiente
+
+O sistema precisa de algumas configurações para funcionar, como o endereço do banco de dados e as suas credenciais (usuário e senha). Elas ficam em um arquivo chamado `.env`.
+
+Para facilitar, o projeto já vem com um arquivo modelo chamado `.env.example`. Você vai criar uma cópia dele com o nome `.env` e preencher com os seus dados.
+
+**Passo 1:** Abra o terminal na pasta do projeto e execute:
+
 ```bash
 cp .env.example .env
+```
+
+> O que isso faz: cria uma cópia do arquivo `.env.example` com o nome `.env`. O arquivo original continua na pasta, sem alterações.
+
+**Passo 2:** Abra o novo arquivo para editar:
+
+```bash
 nano .env
 ```
+
+> O que isso faz: abre o arquivo `.env` em um editor de texto dentro do terminal.
+
+**Passo 3:** Preencha com as suas informações. Por exemplo:
+
+```
+DB_USER=seu_usuario
+DB_PASSWORD=sua_senha
+```
+
+Troque os valores de exemplo pelos seus.
+
+**Passo 4:** Salve e feche o editor:
+
+1. Pressione `Ctrl + O` e depois `Enter` (salvar)
+2. Pressione `Ctrl + X` (sair)
+
+> **Importante:** o arquivo `.env` contém suas senhas. Não compartilhe e não envie para o GitHub.
 
 Preencha todos os valores `CHANGE_ME`:
 
