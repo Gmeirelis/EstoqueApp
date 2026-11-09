@@ -161,11 +161,9 @@ EstoqueApp/
 
 - [ ] Relatórios exportáveis (PDF/Excel)
 - [ ] Notificações de devolução por e-mail
-- [ ] Leitura de código de barras / QR Code
 - [ ] Perfis de acesso com permissões diferentes
 - [ ] Testes automatizados
 
-> Ajuste esta lista para refletir o que você realmente pretende fazer.
 
 ---
 
